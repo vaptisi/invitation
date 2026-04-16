@@ -117,7 +117,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 #screen4{z-index:6}
 .s4-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;transform-origin:center center;padding:20px;width:100%}
 
-.game-card{position:relative;width:88vw;max-width:420px;background:rgba(255,253,248,0.93);border-radius:50% / 7%;border:2px dashed #b8cfe0;padding:28px 22px;text-align:center;box-shadow:0 2px 20px rgba(0,0,0,0.06);display:flex;flex-direction:column;align-items:center}
+.game-card{position:relative;width:88vw;max-width:420px;background:rgba(255,253,248,0.93);border-radius:50% / 7%;border:2px dashed #b8cfe0;padding:28px 16px;text-align:center;box-shadow:0 2px 20px rgba(0,0,0,0.06);display:flex;flex-direction:column;align-items:center}
 
 .game-title{font-size:1.05em;color:#5a7a8a;line-height:1.5;text-align:center;margin-bottom:4px;opacity:0;transform:translateY(-10px)}
 .game-title.vis{animation:su 0.5s ease forwards}
@@ -125,15 +125,16 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .game-subtitle.vis{animation:su 0.5s ease 0.15s forwards}
 
 /* Drop slots row */
-.drop-row{display:flex;gap:clamp(4px,1.2vw,8px);justify-content:center;margin-bottom:24px}
+.drop-row{display:flex;gap:4px;justify-content:center;margin-bottom:18px;width:100%}
 .drop-slot{
-  width:clamp(32px,9vw,48px);
-  height:clamp(38px,10.5vw,56px);
+  flex:1 1 0;
+  max-width:44px;
+  aspect-ratio:5/6;
   border:2.5px dashed #b8cfe0;
-  border-radius:12px;
+  border-radius:10px;
   background:rgba(255,253,248,0.7);
   display:flex;align-items:center;justify-content:center;
-  font-size:clamp(1.2em,4.5vw,1.7em);
+  font-size:clamp(1em,3.8vw,1.5em);
   color:#6a9ab8;font-weight:bold;
   transition:border-color 0.2s,background 0.2s,transform 0.15s;
   position:relative;
@@ -146,14 +147,17 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 @keyframes slotShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 
 /* Drag tiles row */
-.drag-row{display:flex;flex-wrap:wrap;gap:clamp(6px,1.5vw,10px);justify-content:center;max-width:92vw}
+.drag-row{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;width:100%}
 .drag-tile{
-  width:clamp(36px,9.5vw,52px);
-  height:clamp(42px,11vw,58px);
+  flex:0 0 auto;
+  width:calc((100% - 40px) / 9);
+  min-width:30px;
+  max-width:44px;
+  aspect-ratio:5/6;
   background:linear-gradient(145deg,#8ab4d0,#6a9ab8);
-  border-radius:14px;
+  border-radius:10px;
   display:flex;align-items:center;justify-content:center;
-  font-size:clamp(1.3em,4.8vw,1.8em);
+  font-size:clamp(1em,3.8vw,1.5em);
   color:#fff;font-weight:bold;
   cursor:grab;
   box-shadow:0 3px 12px rgba(106,154,184,0.35);
@@ -176,7 +180,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 }
 
 /* Name reveal after solve */
-.name-reveal{font-size:clamp(2.8em,11vw,5em);color:#6a9ab8;font-weight:bold;text-align:center;letter-spacing:clamp(2px,1vw,6px);text-shadow:2px 4px 8px rgba(106,154,184,0.25);opacity:0;transform:scale(0.5) rotate(-5deg);line-height:1.1}
+.name-reveal{font-size:clamp(2em,8vw,3.2em);color:#6a9ab8;font-weight:bold;text-align:center;letter-spacing:clamp(2px,0.8vw,5px);text-shadow:2px 4px 8px rgba(106,154,184,0.25);opacity:0;transform:scale(0.5) rotate(-5deg);line-height:1.1;width:100%;padding:10px 0}
 .name-reveal.vis{animation:nameBurst 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards}
 @keyframes nameBurst{
   0%{opacity:0;transform:scale(0.5) rotate(-5deg)}
@@ -252,7 +256,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 <div class="ln it">Μανιτάρη</div>
 </div>
 <div class="btns">
-<button class="ab" id="nameBtn">Βρείτε το <span class="pulse-word">ΟΝΟΜΑ</span> 🧩</button>
+<button class="ab" id="nameBtn">🧩 Βρείτε το ΟΝΟΜΑ</button>
 <button class="ab" id="mapBtn">📍 Δείτε την τοποθεσία</button>
 <button class="ab" id="calBtn">📅 Προσθήκη στο Ημερολόγιο</button>
 <button class="nxt" id="nextBtn">Συνέχεια →</button>
@@ -750,7 +754,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       document.getElementById('dropRow').style.display = 'none';
       document.getElementById('dragRow').style.display = 'none';
       document.getElementById('gameBtns').style.display = 'none';
-      document.getElementById('gameTitle').textContent = 'Βρήκατε το όνομά του!';
+      document.getElementById('gameTitle').textContent = 'Δεν προσπαθήσατε και πολύ εε?!';
       document.getElementById('gameSub').style.display = 'none';
       var nr = document.getElementById('nameReveal');
       nr.style.display = '';
