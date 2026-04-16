@@ -5,15 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Πρόσκληση Βάπτισης</title>
 <style>
-@font-face {
-  font-family: 'Segoe Print';
-  src: url('segoeprint.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
-html,body{width:100%;height:100%;overflow:hidden;font-family:'Segoe Print','Comic Sans MS','Patrick Hand','Chalkboard SE',cursive;background-color:#f5f0e8}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Segoe Print','Patrick Hand','Comic Sans MS','Chalkboard SE',cursive;background-color:#f5f0e8}
 body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 
 .bg-img{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0}
@@ -42,10 +36,17 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   letter-spacing: 0.3px;
   opacity: 0;
   animation: fi 0s ease 0.3s forwards;
+  cursor: pointer;
 }
+.hint:active{transform:scale(0.97)}
 
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 @keyframes fi{to{opacity:1}}
+
+/* Pulsing "Μπαλόνι" word - only animates after user taps the hint */
+.hint .pulse-word{display:inline-block;transform-origin:center}
+.hint.active-hint .pulse-word{animation:pulseWord 1.2s ease-in-out infinite}
+@keyframes pulseWord{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
 
 /* ── Confetti ── */
 .cf{position:fixed;top:-20px;z-index:500;border-radius:3px;pointer-events:none}
@@ -68,9 +69,16 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .card .ln.v{animation:su 0.5s ease forwards}
 .card .em{font-weight:bold;color:#5a7a8a;font-size:1.15em}
 .card .it{margin-top:0px;margin-bottom:0px;font-style:italic;color:#5a7a8a}
+.card .small{font-size: 0.85em;}
 @keyframes su{to{opacity:1;transform:translateY(0)}}
 
-
+.cal-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.45);z-index:600;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.3s,visibility 0.3s}
+.cal-modal.active{opacity:1;visibility:visible}
+.cal-box{background:#fffdf8;border-radius:22px;padding:28px 22px;width:88vw;max-width:340px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.15)}
+.cal-box .cal-title{font-size:1.2em;color:#5a7a8a;margin-bottom:18px}
+.cal-btn{font-family:inherit;font-size:1.05em;color:#fff;background:linear-gradient(135deg,#8ab4d0,#6a9ab8);border:none;padding:13px 18px;border-radius:28px;cursor:pointer;width:100%;box-shadow:0 3px 12px rgba(138,180,208,0.4);-webkit-appearance:none;margin-bottom:10px;display:block}
+.cal-btn:active{transform:scale(0.97)}
+.cal-btn.outline{color:#8ab4d0;background:rgba(255,253,248,0.95);border:2px solid #b8cfe0;box-shadow:none}
 
 .btns{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:14px;width:88vw;max-width:420px}
 .ab{font-family:inherit;font-size:1.05em;color:#fff;background:linear-gradient(135deg,#8ab4d0,#6a9ab8);border:none;padding:13px 22px;border-radius:28px;cursor:pointer;width:100%;box-shadow:0 3px 12px rgba(138,180,208,0.4);-webkit-appearance:none}
@@ -80,7 +88,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 /* ── Screen 3 – Final ── */
 #screen3{z-index:4}
 .s3-wrap{display:flex;flex-direction:column;align-items:center;transform-origin:center center}
-.final-text{font-size:2.2em;color:#5a7a8a;text-align:center;line-height:1.5;opacity:0;transform:scale(0.8)}
+.final-text{font-size:clamp(1.8em,6vw,2.6em);color:#6a9ab8;text-align:center;line-height:1.5;opacity:0;transform:scale(0.8)}
 .final-text.vis{animation:popIn 0.8s ease forwards}
 .final-bear{width:340px;margin-top:24px;opacity:0;transform:translateY(30px);background:transparent}
 .final-bear.vis{animation:riseUp 0.8s ease 0.5s forwards}
@@ -100,19 +108,19 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .cd-box{background:rgba(138,180,208,0.15);border-radius:16px;padding:10px 14px;min-width:60px;text-align:center}
 .cd-num{font-size:1.8em;color:#6a9ab8;font-weight:bold;line-height:1.2}
 .cd-label{font-size:0.7em;color:#8ab4d0;text-transform:uppercase;letter-spacing:0.5px}
-
-.bear-wrap img,
-.final-bear {
-  transform: translateZ(0);
-  will-change: transform;
-  image-rendering: auto;
-}
 </style>
 </head>
-
+<div class="cal-modal" id="calModal">
+  <div class="cal-box">
+    <div class="cal-title">Προσθήκη στο ημερολόγιο</div>
+    <button class="cal-btn" id="calGoogle">Google Calendar</button>
+    <button class="cal-btn outline" id="calClose">Ακύρωση</button>
+  </div>
+</div>
 <body>
 
 <img class="bg-img" src="background.jpg" alt="background">
+
 
 <!-- SCREEN 1: Tap the balloon -->
 <div class="screen active" id="screen1">
@@ -121,7 +129,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 <img src="bear.gif" alt="bear">
 <div class="tap-zone" id="tapZone"></div>
 </div>
-<div class="hint">Πατήστε το μπαλόνι</div>
+<div class="hint" id="hint">Πατήστε το <span class="pulse-word">Μπαλόνι</span></div>
 </div>
 
 <!-- OVERLAY: "Έχουμε νέα!" -->
@@ -172,50 +180,47 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 
 <img class="final-bear" id="finalBear" src="clothes.gif" alt="clothes">
 
-
 </div>
 <button class="back-btn" id="backBtn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
 </div>
 
 <script>
 (function(){
-
-  function forceGifReload(img){
-    if(!img) return;
-    const src = img.src;
-    img.src = '';
-    img.src = src;
-  }
-
+  // Copy bear image to small bear
   var bearSrc = document.querySelector('.bear-wrap img').src;
   document.getElementById('bearSmall').src = bearSrc;
-
+ 
+  // ── Auto-fit: scale wrappers to always fit the screen ──
   function autoFit(){
     var vh = window.innerHeight;
     var vw = window.innerWidth;
-    var pad = 30;
-
+    var pad = 30; // breathing room px
+ 
     ['s2wrap','s3wrap'].forEach(function(id){
       var el = document.getElementById(id);
       if(!el) return;
-
+      // reset scale to measure natural size
       el.style.transform = 'scale(1)';
       var rect = el.getBoundingClientRect();
       var scaleH = (vh - pad*2) / rect.height;
       var scaleW = (vw - pad*2) / rect.width;
-      var s = Math.min(scaleH, scaleW, 1.15);
-      if(s < 0.5) s = 0.5;
-
+      var s = Math.min(scaleH, scaleW, 1.15); // never scale above 1.15x
+      if(s < 0.5) s = 0.5; // never too tiny
       el.style.transform = 'scale(' + s + ')';
     });
   }
-
+ 
+  // Run on load, resize, orientation change
   window.addEventListener('resize', autoFit);
   window.addEventListener('orientationchange', function(){ setTimeout(autoFit, 200); });
+  // Run after short delay to let fonts load
   setTimeout(autoFit, 100);
-
+  // Also run when screens become visible
+  var origShow2, origShow3;
+ 
   var tapped = false;
 
+  // Helper: add both click and touchend
   function onTap(el, fn){
     var fired = false;
     el.addEventListener('touchend', function(e){
@@ -223,7 +228,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       fired = true;
       fn(e);
     }, {passive: false});
-
     el.addEventListener('click', function(e){
       e.preventDefault();
       if(fired){ fired = false; return; }
@@ -231,10 +235,10 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     });
   }
 
+  // Confetti burst
   function confetti(){
     var cols = ['#8ab4d0','#ffffff','#e8dcc8','#b8cfe0','#d4e4ee'];
     var fr = document.createDocumentFragment();
-
     for(var i = 0; i < 45; i++){
       var d = document.createElement('div');
       d.className = 'cf';
@@ -246,20 +250,18 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       d.style.animationDelay = Math.random()*0.5 + 's';
       fr.appendChild(d);
     }
-
     document.body.appendChild(fr);
-
     requestAnimationFrame(function(){
       var els = document.querySelectorAll('.cf');
       for(var j=0;j<els.length;j++) els[j].classList.add('go');
     });
-
     setTimeout(function(){
       var els = document.querySelectorAll('.cf');
       for(var j=els.length-1;j>=0;j--) els[j].remove();
     }, 2500);
   }
 
+  // Animate card lines
   function animateCard(){
     var lines = document.querySelectorAll('#card .ln');
     for(var i=0; i<lines.length; i++){
@@ -269,133 +271,127 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     }
   }
 
-  // TAP BALLOON
+  // SCREEN 1: Tap balloon
   onTap(document.getElementById('tapZone'), function(){
     if(tapped) return;
     tapped = true;
-
     confetti();
-
-    // ✅ FIX GIF (bear)
-    const bear = document.querySelector('.bear-wrap img');
-    forceGifReload(bear);
-
     document.querySelector('.hint').style.opacity = '0';
-
+    document.getElementById('hint').classList.remove('active-hint');
     setTimeout(function(){
       document.getElementById('overlay').classList.add('active');
     }, 700);
   });
 
-  // OVERLAY BUTTON
+  // HINT button: user tapped the text instead of the balloon — pulse the word
+  onTap(document.getElementById('hint'), function(){
+    if(tapped) return;
+    document.getElementById('hint').classList.add('active-hint');
+  });
+
+  // OVERLAY: Go button
   onTap(document.getElementById('goBtn'), function(){
     document.getElementById('overlay').classList.remove('active');
-
     setTimeout(function(){
       document.getElementById('screen1').classList.remove('active');
       document.getElementById('screen2').classList.add('active');
-
-      autoFit();
-
+	  autoFit();
       setTimeout(function(){
         document.getElementById('bearSmall').classList.add('v');
       }, 350);
-
       animateCard();
     }, 350);
   });
 
-  // MAP
+  // ── Shared location (same for map button AND calendar) ──
+  var mapUrl = 'https://maps.app.goo.gl/JxJXRsj9sPENY9CFA';
+
+  // MAP button
   onTap(document.getElementById('mapBtn'), function(){
-    window.open('https://maps.app.goo.gl/JxJXRsj9sPENY9CFA','_blank');
+    window.open(mapUrl,'_blank');
   });
 
-  // CALENDAR
-  var calTitle = 'Βάπτιση';
-  var calDetails = 'Βάπτιση στον Ιερό Μητροπολιτικό Ναό Ευαγγελισμού της Θεοτόκου Ιλίου';
-  var calLocation = 'Ιερός Μητροπολιτικός Ναός Ευαγγελισμού της Θεοτόκου, Ίλιον';
-  var calStart = '20260517T090000Z';
-  var calEnd   = '20260517T110000Z';
-
-  onTap(document.getElementById('calBtn'), function(){
-    window.open('https://www.google.com/calendar/render?action=TEMPLATE'
+  // CALENDAR button
+  var calTitle = 'Βάπτιση Πορφυρίου';
+  // Use the real postal address so Google Calendar can geocode it and show a map preview.
+  // (Short maps.app.goo.gl links are treated as plain text and produce no preview.)
+  var calLocation = 'Ιερός Ναός Ευαγγελισμού της Θεοτόκου, Πριάμου 123, Ίλιον';
+  var calStart = '20260517T100000Z';
+  var calEnd   = '20260517T120000Z';
+ 
+  function openGoogleCal(){
+    var url = 'https://www.google.com/calendar/render?action=TEMPLATE'
       + '&text=' + encodeURIComponent(calTitle)
       + '&dates=' + calStart + '/' + calEnd
-      + '&details=' + encodeURIComponent(calDetails)
-      + '&location=' + encodeURIComponent(calLocation), '_blank');
+      + '&location=' + encodeURIComponent(calLocation);
+    window.open(url, '_blank');
+  }
+ 
+  function showCalModal(){ document.getElementById('calModal').classList.add('active'); }
+  function hideCalModal(){ document.getElementById('calModal').classList.remove('active'); }
+ 
+  // CALENDAR button - always show modal with Google Calendar option
+  onTap(document.getElementById('calBtn'), function(){
+    showCalModal();
+  });
+ 
+  // Modal buttons
+  onTap(document.getElementById('calGoogle'), function(){
+    hideCalModal();
+    openGoogleCal();
+  });
+  onTap(document.getElementById('calClose'), function(){
+    hideCalModal();
+  });
+  // Tap outside to close
+  document.getElementById('calModal').addEventListener('click', function(e){
+    if(e.target === this) hideCalModal();
   });
 
-  // NEXT -> SCREEN 3
+  // NEXT button -> Screen 3
   onTap(document.getElementById('nextBtn'), function(){
     document.getElementById('screen2').classList.remove('active');
-
     setTimeout(function(){
       document.getElementById('screen3').classList.add('active');
-
-      autoFit();
-
-      setTimeout(function(){
-        document.getElementById('finalText').classList.add('vis');
-      }, 200);
-
-      setTimeout(function(){
-        document.getElementById('countdown').classList.add('vis');
-      }, 350);
-
-      setTimeout(function(){
-        const finalBear = document.getElementById('finalBear');
-        forceGifReload(finalBear); // ✅ FIX GIF
-        finalBear.classList.add('vis');
-      }, 500);
-
+	  autoFit();
+      setTimeout(function(){ document.getElementById('finalText').classList.add('vis'); }, 200);
+      setTimeout(function(){ document.getElementById('finalBear').classList.add('vis'); }, 500);
+	  setTimeout(function(){ document.getElementById('countdown').classList.add('vis'); }, 350);
     }, 400);
   });
 
-  // BACK -> SCREEN 2
+  // BACK button -> Screen 2
   onTap(document.getElementById('backBtn'), function(){
     document.getElementById('screen3').classList.remove('active');
+	autoFit();
     document.getElementById('finalText').classList.remove('vis');
     document.getElementById('finalBear').classList.remove('vis');
-    document.getElementById('countdown').classList.remove('vis');
-
-    var lns = document.querySelectorAll('#card .ln');
-    for(var i=0;i<lns.length;i++) lns[i].classList.remove('v');
-
+	document.getElementById('countdown').classList.remove('vis');
     setTimeout(function(){
       document.getElementById('screen2').classList.add('active');
-      autoFit();
-      animateCard();
+	  autoFit();
     }, 300);
   });
 
-  // BACK -> SCREEN 1
   onTap(document.getElementById('backBtn2'), function(){
     document.getElementById('screen2').classList.remove('active');
     document.getElementById('bearSmall').classList.remove('v');
-
-    var lns = document.querySelectorAll('#card .ln');
-    for(var i=0;i<lns.length;i++) lns[i].classList.remove('v');
-
     setTimeout(function(){
       document.getElementById('screen1').classList.add('active');
       tapped = false;
       document.querySelector('.hint').style.opacity = '';
+      document.getElementById('hint').classList.remove('active-hint');
     }, 300);
   });
-
-  // COUNTDOWN
   var targetDate = new Date('2026-05-17T13:10:30+03:00');
-
   function updateCountdown(){
     var diff = targetDate - new Date();
     if(diff <= 0){ diff = 0; }
-
-    document.getElementById('cdDays').textContent = Math.floor(diff / 86400000);
-    document.getElementById('cdHours').textContent = Math.floor((diff % 86400000) / 3600000);
-    document.getElementById('cdMins').textContent = Math.floor((diff % 3600000) / 60000);
-    document.getElementById('cdSecs').textContent = Math.floor((diff % 60000) / 1000);
+		document.getElementById('cdDays').textContent = Math.floor(diff / 86400000);
+		document.getElementById('cdHours').textContent = Math.floor((diff % 86400000) / 3600000);
+		document.getElementById('cdMins').textContent = Math.floor((diff % 3600000) / 60000);
+		document.getElementById('cdSecs').textContent = Math.floor((diff % 60000) / 1000);
   }
-
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
