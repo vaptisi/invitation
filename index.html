@@ -54,6 +54,9 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .hint.active-hint .pulse-word{animation:pulseWord 1.2s ease-in-out infinite}
 @keyframes pulseWord{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
 
+/* Pulsing "ΟΝΟΜΑ" word - always animating */
+#nameBtn .pulse-word{display:inline-block;transform-origin:center;animation:pulseWord 1.2s ease-in-out infinite}
+
 /* ── Confetti ── */
 .cf{position:fixed;top:-20px;z-index:500;border-radius:3px;pointer-events:none}
 .cf.go{animation:cfall var(--d) ease-out forwards}
@@ -98,6 +101,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .btns{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:14px;width:88vw;max-width:420px}
 .ab{font-family:inherit;font-size:1.05em;color:#fff;background:linear-gradient(135deg,#8ab4d0,#6a9ab8);border:none;padding:13px 22px;border-radius:28px;cursor:pointer;width:100%;box-shadow:0 3px 12px rgba(138,180,208,0.4);-webkit-appearance:none}
 .ab:active{transform:scale(0.97)}
+.ab.name-btn{background:linear-gradient(135deg,#d4a5c8,#b88ab0);box-shadow:0 3px 12px rgba(184,138,176,0.4)}
 .nxt{font-family:inherit;font-size:1.05em;color:#8ab4d0;background:rgba(255,253,248,0.95);border:2px solid #b8cfe0;padding:11px 32px;border-radius:28px;cursor:pointer;width:100%;-webkit-appearance:none}
 
 /* ── Screen 3 – Final ── */
@@ -109,6 +113,17 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .final-bear.vis{animation:riseUp 0.8s ease 0.5s forwards}
 @keyframes popIn{to{opacity:1;transform:scale(1)}}
 @keyframes riseUp{to{opacity:1;transform:translateY(0)}}
+
+/* ── Screen 4 – Name reveal ── */
+#screen4{z-index:6}
+.s4-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;transform-origin:center center;padding:20px}
+.name-reveal{font-size:clamp(2.8em,11vw,5em);color:#6a9ab8;font-weight:bold;text-align:center;letter-spacing:clamp(2px,1vw,6px);text-shadow:2px 4px 8px rgba(106,154,184,0.25);opacity:0;transform:scale(0.5) rotate(-5deg);line-height:1.1}
+.name-reveal.vis{animation:nameBurst 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards}
+@keyframes nameBurst{
+  0%{opacity:0;transform:scale(0.5) rotate(-5deg)}
+  60%{opacity:1;transform:scale(1.1) rotate(2deg)}
+  100%{opacity:1;transform:scale(1) rotate(0deg)}
+}
 
 .back-btn{position:fixed;top:20px;left:20px;width:44px;height:44px;border-radius:50%;background:rgba(255,253,248,0.95);border:2px solid #b8cfe0;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,0.1);-webkit-appearance:none;z-index:60;padding:0}
 .back-btn svg{width:20px;height:20px;stroke:#8ab4d0;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
@@ -179,6 +194,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 <div class="ln it">Μανιτάρη</div>
 </div>
 <div class="btns">
+<button class="ab" id="nameBtn"><span class="pulse-word">ΟΝΟΜΑ</span></button>
 <button class="ab" id="mapBtn">📍 Δείτε την τοποθεσία</button>
 <button class="ab" id="calBtn">📅 Προσθήκη στο Ημερολόγιο</button>
 <button class="nxt" id="nextBtn">Συνέχεια →</button>
@@ -186,6 +202,15 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 </div>
 <button class="back-btn" id="backBtn2"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
 <img class="bsm" id="bearSmall" src="" alt="bear">
+</div>
+
+<!-- SCREEN 4: Name reveal -->
+<div class="screen" id="screen4">
+<img class="bg-img" src="background.jpg" alt="background">
+<div class="s4-wrap" id="s4wrap">
+<div class="name-reveal" id="nameReveal">ΠΟΡΦΥΡΙΟΣ</div>
+</div>
+<button class="back-btn" id="backBtn4"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
 </div>
 
 <!-- SCREEN 3: Final -->
@@ -221,7 +246,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     var vw = window.innerWidth;
     var pad = 30; // breathing room px
  
-    ['s2wrap','s3wrap'].forEach(function(id){
+    ['s2wrap','s3wrap','s4wrap'].forEach(function(id){
       var el = document.getElementById(id);
       if(!el) return;
       // reset scale to measure natural size
@@ -262,6 +287,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   function confetti(){
     var cols = ['#8ab4d0','#ffffff','#e8dcc8','#b8cfe0','#d4e4ee'];
     var fr = document.createDocumentFragment();
+    var newEls = [];
     for(var i = 0; i < 45; i++){
       var d = document.createElement('div');
       d.className = 'cf';
@@ -272,15 +298,17 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       d.style.setProperty('--d', (1+Math.random()) + 's');
       d.style.animationDelay = Math.random()*0.5 + 's';
       fr.appendChild(d);
+      newEls.push(d);
     }
     document.body.appendChild(fr);
     requestAnimationFrame(function(){
-      var els = document.querySelectorAll('.cf');
-      for(var j=0;j<els.length;j++) els[j].classList.add('go');
+      for(var j=0;j<newEls.length;j++) newEls[j].classList.add('go');
     });
+    // Remove only the pieces from THIS burst, not all confetti on page
     setTimeout(function(){
-      var els = document.querySelectorAll('.cf');
-      for(var j=els.length-1;j>=0;j--) els[j].remove();
+      for(var j=newEls.length-1;j>=0;j--){
+        if(newEls[j].parentNode) newEls[j].remove();
+      }
     }, 2500);
   }
 
@@ -378,6 +406,38 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   // Tap outside to close
   document.getElementById('calModal').addEventListener('click', function(e){
     if(e.target === this) hideCalModal();
+  });
+
+  // NAME button -> Screen 4 (name reveal with confetti)
+  onTap(document.getElementById('nameBtn'), function(){
+    showLoader();
+    document.getElementById('screen2').classList.remove('active');
+    document.getElementById('bearSmall').classList.remove('v');
+    setTimeout(function(){
+      document.getElementById('screen4').classList.add('active');
+      autoFit();
+      setTimeout(function(){
+        hideLoader();
+        // Single burst of confetti on name reveal
+        confetti();
+        setTimeout(function(){ document.getElementById('nameReveal').classList.add('vis'); }, 400);
+        // Second burst for extra effect
+        setTimeout(function(){ confetti(); }, 600);
+      }, 750);
+    }, 300);
+  });
+
+  // BACK button from Screen 4 -> Screen 2
+  onTap(document.getElementById('backBtn4'), function(){
+    document.getElementById('screen4').classList.remove('active');
+    document.getElementById('nameReveal').classList.remove('vis');
+    setTimeout(function(){
+      document.getElementById('screen2').classList.add('active');
+      autoFit();
+      setTimeout(function(){
+        document.getElementById('bearSmall').classList.add('v');
+      }, 100);
+    }, 300);
   });
 
   // NEXT button -> Screen 3
