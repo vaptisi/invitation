@@ -4,6 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Πρόσκληση Βάπτισης</title>
+
+<!-- ═══ Thumbnail / Social Preview ═══ -->
+<meta name="description" content="Πρόσκληση Βάπτισης - Κυριακή 17 Μαΐου 2026">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Πρόσκληση Βάπτισης">
+<meta property="og:description" content="Κυριακή 17 Μαΐου 2026 - Ιερός Ναός Ευαγγελισμού της Θεοτόκου, Ίλιον">
+<meta property="og:image" content="thumbnail.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Πρόσκληση Βάπτισης">
+<meta name="twitter:description" content="Κυριακή 17 Μαΐου 2026 - Ιερός Ναός Ευαγγελισμού της Θεοτόκου, Ίλιον">
+<meta name="twitter:image" content="thumbnail.png">
+<link rel="icon" type="image/png" href="thumbnail.png">
+<link rel="apple-touch-icon" href="thumbnail.png">
+<!-- Preload critical assets so they're ready when the initial loader finishes -->
+<link rel="preload" as="image" href="background.jpg">
+<link rel="preload" as="image" href="bear.gif">
+
 <style>
 @font-face {
   font-family: 'Segoe Print';
@@ -76,6 +95,10 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .loader-text{margin-top:22px;font-size:clamp(1.1em,4vw,1.4em);color:#6a9ab8;letter-spacing:0.5px}
 .loader-text::after{content:'';display:inline-block;width:1em;text-align:left;animation:dots 1.4s steps(4,end) infinite}
 @keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+
+/* ── Initial page loader (shown until page fully loads) ── */
+#initLoader{position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f0e8;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.5s ease,visibility 0.5s ease}
+#initLoader.hidden{opacity:0;visibility:hidden;pointer-events:none}
 
 /* ── Screen 2 – Invitation card ── */
 #screen2{z-index:5;justify-content:center;padding:0}
@@ -191,6 +214,31 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   100%{opacity:1;transform:scale(1) rotate(0deg)}
 }
 
+/* Post-solve action buttons inside game card */
+.solve-actions{display:none;flex-direction:column;gap:10px;margin-top:18px;width:100%;align-items:center}
+.solve-actions.vis{display:flex;animation:su 0.5s ease 0.6s both}
+
+/* ── Screen 5 – Saint info ── */
+#screen5{z-index:7}
+.s5-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;transform-origin:center center;padding:20px;width:100%}
+
+.info-card{position:relative;width:88vw;max-width:460px;background:rgba(255,253,248,0.93);border-radius:50% / 5%;border:2px dashed #b8cfe0;padding:28px 22px;text-align:left;box-shadow:0 2px 20px rgba(0,0,0,0.06);max-height:75vh;overflow-y:auto}
+.info-card::-webkit-scrollbar{width:6px}
+.info-card::-webkit-scrollbar-track{background:transparent}
+.info-card::-webkit-scrollbar-thumb{background:rgba(138,180,208,0.4);border-radius:3px}
+
+.info-title{font-size:1.25em;color:#5a7a8a;font-weight:bold;text-align:center;margin-bottom:6px;line-height:1.3;opacity:0;transform:translateY(-10px)}
+.info-title.vis{animation:su 0.5s ease forwards}
+.info-years{font-size:1em;color:#8ab4d0;text-align:center;margin-bottom:16px;font-style:italic;opacity:0;transform:translateY(-10px)}
+.info-years.vis{animation:su 0.5s ease 0.1s forwards}
+.info-para{font-size:0.98em;color:#5a7a8a;line-height:1.6;margin-bottom:12px;text-align:justify;opacity:0;transform:translateY(10px)}
+.info-para.vis{animation:su 0.5s ease forwards}
+.info-para:nth-child(3).vis{animation-delay:0.2s}
+.info-para:nth-child(4).vis{animation-delay:0.3s}
+.info-para:nth-child(5).vis{animation-delay:0.4s}
+.info-para:nth-child(6).vis{animation-delay:0.5s}
+.info-para .highlight{color:#6a9ab8;font-weight:bold}
+
 .back-btn{position:fixed;top:20px;left:20px;width:44px;height:44px;border-radius:50%;background:rgba(255,253,248,0.95);border:2px solid #b8cfe0;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,0.1);-webkit-appearance:none;z-index:60;padding:0}
 .back-btn svg{width:20px;height:20px;stroke:#8ab4d0;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .back-btn:active{transform:scale(0.93)}
@@ -206,6 +254,14 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .cd-label{font-size:0.7em;color:#8ab4d0;text-transform:uppercase;letter-spacing:0.5px}
 </style>
 </head>
+<body>
+
+<!-- INITIAL LOADER: shown until window.load fires -->
+<div id="initLoader">
+  <div class="spinner"></div>
+  <div class="loader-text">Φορτώνει</div>
+</div>
+
 <div class="cal-modal" id="calModal">
   <div class="cal-box">
     <div class="cal-title">Προσθήκη στο ημερολόγιο</div>
@@ -213,7 +269,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     <button class="cal-btn outline" id="calClose">Ακύρωση</button>
   </div>
 </div>
-<body>
 
 <img class="bg-img" src="background.jpg" alt="background">
 
@@ -233,7 +288,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 <button class="ov-b" id="goBtn">Πατήστε εδώ</button>
 </div>
 
-<!-- LOADING overlay -->
+<!-- LOADING overlay (between-screen transitions) -->
 <div id="loader">
   <div class="spinner"></div>
   <div class="loader-text">Φορτώνει</div>
@@ -280,12 +335,36 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     <div class="drag-row" id="dragRow"></div>
     <div class="attempts-display" id="attemptsDisplay">Προσπάθεια: 1 / 2</div>
     <div class="name-reveal" id="nameReveal" style="display:none">ΠΟΡΦΥΡΙΟΣ</div>
+    <!-- Post-solve buttons INSIDE the game card -->
+    <div class="solve-actions" id="solveActions">
+      <button class="ab" id="infoBtn">📖 Λεπτομέρειες</button>
+      <button class="nxt" id="continueBtn">Συνέχεια →</button>
+    </div>
   </div>
   <div class="btns" id="gameBtns">
     <button class="nxt" id="skipBtn" style="opacity:0;animation:fi 0s ease 1.5s forwards">Παράβλεψη →</button>
   </div>
 </div>
 <button class="back-btn" id="backBtn4"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+</div>
+
+<!-- SCREEN 5: Saint Info -->
+<div class="screen" id="screen5">
+<img class="bg-img" src="background.jpg" alt="background">
+<div class="s5-wrap" id="s5wrap">
+  <div class="info-card" id="infoCard">
+    <div class="info-title" id="infoTitle">Ο Άγιος Πορφύριος ο Καυσοκαλυβίτης</div>
+    <div class="info-years" id="infoYears">(1906 - 1991)</div>
+    <div class="info-para">Ο <span class="highlight">Άγιος Πορφύριος</span>, κατά κόσμον Ευάγγελος Μπαϊρακτάρης, γεννήθηκε στην Εύβοια και από την ηλικία των 12 ετών ακολούθησε τον μοναχισμό στο Άγιο Όρος, στην έρημο των Καυσοκαλυβίων. Εκεί έζησε με άκρα ταπείνωση και υπακοή, λαμβάνοντας από τον Θεό το σπάνιο διορατικό και ιαματικό χάρισμα.</div>
+    <div class="info-para">Αργότερα, υπηρέτησε ως εφημέριος στην <span class="highlight">Πολυκλινική Αθηνών</span> δίπλα στην Ομόνοια, προσφέροντας παρηγοριά, αγάπη και πνευματική καθοδήγηση σε χιλιάδες πονεμένους ανθρώπους.</div>
+    <div class="info-para">Ίδρυσε το <span class="highlight">Ιερό Ησυχαστήριο Μεταμορφώσεως του Σωτήρος</span> στο Μήλεσι Αττικής, ενώ εκοιμήθη οσιακά στον αγαπημένο του τόπο, τα Καυσοκαλύβια.</div>
+    <div class="info-para" style="text-align:center;font-style:italic">Η μνήμη του τιμάται στις <span class="highlight">2 Δεκεμβρίου</span>.</div>
+  </div>
+  <div class="btns">
+    <button class="nxt" id="infoContinueBtn">Συνέχεια →</button>
+  </div>
+</div>
+<button class="back-btn" id="backBtn5"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
 </div>
 
 <!-- SCREEN 3: Final -->
@@ -304,6 +383,23 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 </div>
 
 <script>
+// ═══ HIDE INITIAL LOADER ONCE EVERYTHING IS LOADED ═══
+(function(){
+  function hideInitLoader(){
+    var il = document.getElementById('initLoader');
+    if(il) il.classList.add('hidden');
+  }
+  if(document.readyState === 'complete'){
+    setTimeout(hideInitLoader, 200);
+  } else {
+    window.addEventListener('load', function(){
+      setTimeout(hideInitLoader, 200);
+    });
+    // Failsafe: never leave the loader stuck
+    setTimeout(hideInitLoader, 8000);
+  }
+})();
+
 (function(){
   var bearSrc = document.querySelector('.bear-wrap img').src;
   document.getElementById('bearSmall').src = bearSrc;
@@ -316,7 +412,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     var vh = window.innerHeight;
     var vw = window.innerWidth;
     var pad = 30;
-    ['s2wrap','s3wrap','s4wrap'].forEach(function(id){
+    ['s2wrap','s3wrap','s4wrap','s5wrap'].forEach(function(id){
       var el = document.getElementById(id);
       if(!el) return;
       el.style.transform = 'scale(1)';
@@ -452,18 +548,16 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   var letters = NAME.split('');
   var gameSolved = false;
   var attempts = 0;
-  var placed = []; // array of letters placed in slots (null if empty)
+  var placed = [];
   var dragTiles = [];
   var dropSlots = [];
 
   function shuffleArray(arr){
     var a = arr.slice();
-    // Fisher-Yates, but ensure it's not already in order
     for(var i = a.length - 1; i > 0; i--){
       var j = Math.floor(Math.random() * (i + 1));
       var t = a[i]; a[i] = a[j]; a[j] = t;
     }
-    // If shuffle produced the original order, swap first two
     if(a.join('') === NAME){ var tmp = a[0]; a[0] = a[1]; a[1] = tmp; }
     return a;
   }
@@ -479,7 +573,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     dropSlots = [];
     dragTiles = [];
 
-    // Build drop slots
     for(var i = 0; i < letters.length; i++){
       var slot = document.createElement('div');
       slot.className = 'drop-slot';
@@ -488,7 +581,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       dropRow.appendChild(slot);
       dropSlots.push(slot);
 
-      // Tap on filled slot to return letter
       (function(idx, slotEl){
         onTap(slotEl, function(){
           if(gameSolved) return;
@@ -497,7 +589,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       })(i, slot);
     }
 
-    // Build drag tiles (shuffled)
     var shuffled = shuffleArray(letters);
     for(var j = 0; j < shuffled.length; j++){
       var tile = document.createElement('div');
@@ -511,10 +602,13 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     }
 
     // Reset UI
+    document.getElementById('dropRow').style.display = '';
+    document.getElementById('dragRow').style.display = '';
     document.getElementById('skipBtn').style.display = '';
     document.getElementById('gameBtns').style.display = '';
     document.getElementById('nameReveal').style.display = 'none';
     document.getElementById('nameReveal').classList.remove('vis');
+    document.getElementById('solveActions').classList.remove('vis');
     document.getElementById('gameTitle').classList.remove('vis');
     document.getElementById('gameTitle').textContent = 'Βρείτε το όνομά του!';
     document.getElementById('gameTitle').style.opacity = '';
@@ -531,9 +625,9 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     placed[idx] = null;
     dropSlots[idx].textContent = '';
     dropSlots[idx].classList.remove('filled','correct');
-    // Un-hide the drag tile
-    var tile = dragTiles[tileId];
-    tile.classList.remove('placed');
+    if(tileId >= 0 && dragTiles[tileId]){
+      dragTiles[tileId].classList.remove('placed');
+    }
   }
 
   function findFirstEmptySlot(){
@@ -554,42 +648,45 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     return true;
   }
 
+  // Shared victory sequence - triggers both name reveal AND action buttons
+  function showVictorySequence(titleText){
+    confetti();
+    document.getElementById('dropRow').style.display = 'none';
+    document.getElementById('dragRow').style.display = 'none';
+    document.getElementById('gameBtns').style.display = 'none';
+    document.getElementById('attemptsDisplay').style.display = 'none';
+    document.getElementById('gameTitle').textContent = titleText;
+    document.getElementById('gameSub').style.display = 'none';
+    var nr = document.getElementById('nameReveal');
+    nr.style.display = '';
+    setTimeout(function(){ nr.classList.add('vis'); }, 100);
+    setTimeout(function(){ confetti(); }, 500);
+    setTimeout(function(){
+      document.getElementById('solveActions').classList.add('vis');
+      autoFit();
+    }, 800);
+    autoFit();
+  }
+
   function checkSolved(){
-    // Check if all slots are filled
     for(var i = 0; i < placed.length; i++){
       if(placed[i] === null) return;
     }
-    // Check if correct
     var word = '';
     for(var j = 0; j < placed.length; j++){
       word += placed[j].letter;
     }
     if(word === NAME){
       gameSolved = true;
-      // Mark all correct
       for(var k = 0; k < dropSlots.length; k++){
         dropSlots[k].classList.add('correct');
       }
-      // Victory sequence
       setTimeout(function(){
-        confetti();
-        document.getElementById('dropRow').style.display = 'none';
-        document.getElementById('dragRow').style.display = 'none';
-        document.getElementById('gameBtns').style.display = 'none';
-        document.getElementById('attemptsDisplay').style.display = 'none';
-        document.getElementById('gameTitle').textContent = 'Βρήκατε το όνομά του!';
-        document.getElementById('gameSub').style.display = 'none';
-        var nr = document.getElementById('nameReveal');
-        nr.style.display = '';
-        setTimeout(function(){ nr.classList.add('vis'); }, 100);
-        setTimeout(function(){ confetti(); }, 500);
-        autoFit();
+        showVictorySequence('Βρήκατε το όνομά του!');
       }, 500);
     } else {
       attempts++;
-      // Update attempts display
       document.getElementById('attemptsDisplay').textContent = 'Προσπάθεια: ' + Math.min(attempts + 1, 2) + ' / 2';
-      // Wrong order – shake all slots briefly, then return all letters
       for(var m = 0; m < dropSlots.length; m++){
         dropSlots[m].classList.add('wrong');
       }
@@ -597,11 +694,9 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
         for(var m = 0; m < dropSlots.length; m++){
           dropSlots[m].classList.remove('wrong');
         }
-        // Return all letters to pool
         for(var n = placed.length - 1; n >= 0; n--){
           returnLetterFromSlot(n);
         }
-        // After 2 failed attempts, auto-solve
         if(attempts >= 2){
           gameSolved = true;
           for(var j = 0; j < dragTiles.length; j++){
@@ -613,30 +708,19 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
             dropSlots[k].classList.add('filled','correct');
           }
           setTimeout(function(){
-            confetti();
-            document.getElementById('dropRow').style.display = 'none';
-            document.getElementById('dragRow').style.display = 'none';
-            document.getElementById('gameBtns').style.display = 'none';
-            document.getElementById('attemptsDisplay').style.display = 'none';
-            document.getElementById('gameTitle').textContent = 'Δεν πειράζει, έστω προσπάθησες!';
-            document.getElementById('gameSub').style.display = 'none';
-            var nr = document.getElementById('nameReveal');
-            nr.style.display = '';
-            setTimeout(function(){ nr.classList.add('vis'); }, 100);
-            setTimeout(function(){ confetti(); }, 500);
-            autoFit();
+            showVictorySequence('Δεν πειράζει, έστω προσπάθησες!');
           }, 400);
         }
       }, 450);
     }
   }
 
-  // ── Drag & drop (touch + mouse) with tap-to-place ──
+  // ── Drag & drop ──
   function initDrag(tile){
     var startX, startY, origX, origY, isDragging = false;
     var clone = null;
     var totalMoved = 0;
-    var TAP_THRESHOLD = 10; // pixels - below this counts as a tap
+    var TAP_THRESHOLD = 10;
 
     function onStart(cx, cy){
       if(gameSolved || tile.classList.contains('placed')) return;
@@ -648,7 +732,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       startX = cx;
       startY = cy;
 
-      // Create a floating clone for dragging
       clone = tile.cloneNode(true);
       clone.style.position = 'fixed';
       clone.style.left = origX + 'px';
@@ -672,7 +755,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       clone.style.left = (origX + dx) + 'px';
       clone.style.top = (origY + dy) + 'px';
 
-      // Highlight slot under finger
       var cloneRect = clone.getBoundingClientRect();
       var centerX = cloneRect.left + cloneRect.width / 2;
       var centerY = cloneRect.top + cloneRect.height / 2;
@@ -690,12 +772,10 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       if(!isDragging) return;
       isDragging = false;
 
-      // Remove all hover states
       for(var i = 0; i < dropSlots.length; i++){
         dropSlots[i].classList.remove('hover');
       }
 
-      // Was it a tap (minimal movement)?
       if(totalMoved < TAP_THRESHOLD){
         if(clone){ clone.remove(); clone = null; }
         tile.style.opacity = '';
@@ -708,7 +788,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
         return;
       }
 
-      // Otherwise it was a drag - determine which slot we're over
       if(clone){
         var cloneRect = clone.getBoundingClientRect();
         var centerX = cloneRect.left + cloneRect.width / 2;
@@ -736,7 +815,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       }
     }
 
-    // Touch events
     tile.addEventListener('touchstart', function(e){
       e.preventDefault();
       var t = e.touches[0];
@@ -753,7 +831,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       onEnd(t.clientX, t.clientY);
     }, {passive: false});
 
-    // Mouse events
     tile.addEventListener('mousedown', function(e){
       e.preventDefault();
       onStart(e.clientX, e.clientY);
@@ -772,34 +849,19 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   onTap(document.getElementById('skipBtn'), function(){
     if(gameSolved) return;
     gameSolved = true;
-    // Place all correct letters
     for(var i = 0; i < letters.length; i++){
-      // Return anything in slot first
       if(placed[i] !== null) returnLetterFromSlot(i);
     }
-    // Hide tiles
     for(var j = 0; j < dragTiles.length; j++){
       dragTiles[j].classList.add('placed');
     }
-    // Fill slots with correct letters
     for(var k = 0; k < letters.length; k++){
       placed[k] = { tileId: -1, letter: letters[k] };
       dropSlots[k].textContent = letters[k];
       dropSlots[k].classList.add('filled','correct');
     }
     setTimeout(function(){
-      confetti();
-      document.getElementById('dropRow').style.display = 'none';
-      document.getElementById('dragRow').style.display = 'none';
-      document.getElementById('gameBtns').style.display = 'none';
-      document.getElementById('attemptsDisplay').style.display = 'none';
-      document.getElementById('gameTitle').textContent = 'Δεν προσπαθήσατε και πολύ εε?!';
-      document.getElementById('gameSub').style.display = 'none';
-      var nr = document.getElementById('nameReveal');
-      nr.style.display = '';
-      setTimeout(function(){ nr.classList.add('vis'); }, 100);
-      setTimeout(function(){ confetti(); }, 500);
-      autoFit();
+      showVictorySequence('Δεν προσπαθήσατε και πολύ εε?!');
     }, 400);
   });
 
@@ -809,11 +871,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     document.getElementById('screen2').classList.remove('active');
     document.getElementById('bearSmall').classList.remove('v');
     setTimeout(function(){
-      // Reset game
-      document.getElementById('dropRow').style.display = '';
-      document.getElementById('dragRow').style.display = '';
-      document.getElementById('gameTitle').style.opacity = '';
-      document.getElementById('gameSub').style.opacity = '';
       buildGame();
       document.getElementById('screen4').classList.add('active');
       autoFit();
@@ -825,10 +882,87 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     }, 300);
   });
 
+  // "Συνέχεια" from game victory → Screen 2
+  onTap(document.getElementById('continueBtn'), function(){
+    showLoader();
+    document.getElementById('screen4').classList.remove('active');
+    document.getElementById('nameReveal').classList.remove('vis');
+    document.getElementById('solveActions').classList.remove('vis');
+    setTimeout(function(){
+      document.getElementById('screen2').classList.add('active');
+      autoFit();
+      setTimeout(function(){
+        hideLoader();
+        setTimeout(function(){
+          document.getElementById('bearSmall').classList.add('v');
+        }, 100);
+      }, 400);
+    }, 300);
+  });
+
+  // "Λεπτομέρειες" from game victory → Screen 5
+  function animateInfoScreen(){
+    var els = ['infoTitle','infoYears'];
+    for(var i=0;i<els.length;i++){
+      document.getElementById(els[i]).classList.remove('vis');
+    }
+    var paras = document.querySelectorAll('#infoCard .info-para');
+    for(var j=0;j<paras.length;j++){
+      paras[j].classList.remove('vis');
+    }
+    setTimeout(function(){
+      document.getElementById('infoTitle').classList.add('vis');
+      document.getElementById('infoYears').classList.add('vis');
+      for(var k=0;k<paras.length;k++){
+        paras[k].classList.add('vis');
+      }
+    }, 50);
+  }
+
+  onTap(document.getElementById('infoBtn'), function(){
+    showLoader();
+    document.getElementById('screen4').classList.remove('active');
+    setTimeout(function(){
+      document.getElementById('screen5').classList.add('active');
+      document.getElementById('infoCard').scrollTop = 0;
+      autoFit();
+      setTimeout(function(){
+        hideLoader();
+        animateInfoScreen();
+      }, 600);
+    }, 300);
+  });
+
+  // "Συνέχεια" from info screen → Screen 2
+  onTap(document.getElementById('infoContinueBtn'), function(){
+    showLoader();
+    document.getElementById('screen5').classList.remove('active');
+    setTimeout(function(){
+      document.getElementById('screen2').classList.add('active');
+      autoFit();
+      setTimeout(function(){
+        hideLoader();
+        setTimeout(function(){
+          document.getElementById('bearSmall').classList.add('v');
+        }, 100);
+      }, 400);
+    }, 300);
+  });
+
+  // BACK from Screen 5 → Screen 4 (victory state preserved)
+  onTap(document.getElementById('backBtn5'), function(){
+    document.getElementById('screen5').classList.remove('active');
+    setTimeout(function(){
+      document.getElementById('screen4').classList.add('active');
+      autoFit();
+    }, 300);
+  });
+
   // BACK from Screen 4 -> Screen 2
   onTap(document.getElementById('backBtn4'), function(){
     document.getElementById('screen4').classList.remove('active');
     document.getElementById('nameReveal').classList.remove('vis');
+    document.getElementById('solveActions').classList.remove('vis');
     setTimeout(function(){
       document.getElementById('screen2').classList.add('active');
       autoFit();
