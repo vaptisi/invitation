@@ -179,6 +179,9 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   transform:scale(0.5);
 }
 
+/* Attempts counter */
+.attempts-display{font-size:0.85em;color:#8ab4d0;margin-top:14px;opacity:0.8}
+
 /* Name reveal after solve */
 .name-reveal{font-size:clamp(2em,8vw,3.2em);color:#6a9ab8;font-weight:bold;text-align:center;letter-spacing:clamp(2px,0.8vw,5px);text-shadow:2px 4px 8px rgba(106,154,184,0.25);opacity:0;transform:scale(0.5) rotate(-5deg);line-height:1.1;width:100%;padding:10px 0}
 .name-reveal.vis{animation:nameBurst 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards}
@@ -275,6 +278,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     <div class="game-subtitle" id="gameSub">Σύρετε τα γράμματα στη σωστή σειρά</div>
     <div class="drop-row" id="dropRow"></div>
     <div class="drag-row" id="dragRow"></div>
+    <div class="attempts-display" id="attemptsDisplay">Προσπάθεια: 1 / 2</div>
     <div class="name-reveal" id="nameReveal" style="display:none">ΠΟΡΦΥΡΙΟΣ</div>
   </div>
   <div class="btns" id="gameBtns">
@@ -447,6 +451,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   var NAME = 'ΠΟΡΦΥΡΙΟΣ';
   var letters = NAME.split('');
   var gameSolved = false;
+  var attempts = 0;
   var placed = []; // array of letters placed in slots (null if empty)
   var dragTiles = [];
   var dropSlots = [];
@@ -465,6 +470,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 
   function buildGame(){
     gameSolved = false;
+    attempts = 0;
     placed = [];
     var dropRow = document.getElementById('dropRow');
     var dragRow = document.getElementById('dragRow');
@@ -515,6 +521,8 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     document.getElementById('gameSub').classList.remove('vis');
     document.getElementById('gameSub').style.display = '';
     document.getElementById('gameSub').style.opacity = '';
+    document.getElementById('attemptsDisplay').style.display = '';
+    document.getElementById('attemptsDisplay').textContent = 'Προσπάθεια: 1 / 2';
   }
 
   function returnLetterFromSlot(idx){
@@ -568,6 +576,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
         document.getElementById('dropRow').style.display = 'none';
         document.getElementById('dragRow').style.display = 'none';
         document.getElementById('gameBtns').style.display = 'none';
+        document.getElementById('attemptsDisplay').style.display = 'none';
         document.getElementById('gameTitle').textContent = 'Βρήκατε το όνομά του!';
         document.getElementById('gameSub').style.display = 'none';
         var nr = document.getElementById('nameReveal');
@@ -577,6 +586,9 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
         autoFit();
       }, 500);
     } else {
+      attempts++;
+      // Update attempts display
+      document.getElementById('attemptsDisplay').textContent = 'Προσπάθεια: ' + Math.min(attempts + 1, 2) + ' / 2';
       // Wrong order – shake all slots briefly, then return all letters
       for(var m = 0; m < dropSlots.length; m++){
         dropSlots[m].classList.add('wrong');
@@ -588,6 +600,32 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
         // Return all letters to pool
         for(var n = placed.length - 1; n >= 0; n--){
           returnLetterFromSlot(n);
+        }
+        // After 2 failed attempts, auto-solve
+        if(attempts >= 2){
+          gameSolved = true;
+          for(var j = 0; j < dragTiles.length; j++){
+            dragTiles[j].classList.add('placed');
+          }
+          for(var k = 0; k < letters.length; k++){
+            placed[k] = { tileId: -1, letter: letters[k] };
+            dropSlots[k].textContent = letters[k];
+            dropSlots[k].classList.add('filled','correct');
+          }
+          setTimeout(function(){
+            confetti();
+            document.getElementById('dropRow').style.display = 'none';
+            document.getElementById('dragRow').style.display = 'none';
+            document.getElementById('gameBtns').style.display = 'none';
+            document.getElementById('attemptsDisplay').style.display = 'none';
+            document.getElementById('gameTitle').textContent = 'Δεν πειράζει, έστω προσπάθησες!';
+            document.getElementById('gameSub').style.display = 'none';
+            var nr = document.getElementById('nameReveal');
+            nr.style.display = '';
+            setTimeout(function(){ nr.classList.add('vis'); }, 100);
+            setTimeout(function(){ confetti(); }, 500);
+            autoFit();
+          }, 400);
         }
       }, 450);
     }
@@ -754,6 +792,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       document.getElementById('dropRow').style.display = 'none';
       document.getElementById('dragRow').style.display = 'none';
       document.getElementById('gameBtns').style.display = 'none';
+      document.getElementById('attemptsDisplay').style.display = 'none';
       document.getElementById('gameTitle').textContent = 'Δεν προσπαθήσατε και πολύ εε?!';
       document.getElementById('gameSub').style.display = 'none';
       var nr = document.getElementById('nameReveal');
