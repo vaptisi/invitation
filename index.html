@@ -117,9 +117,11 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 #screen4{z-index:6}
 .s4-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;transform-origin:center center;padding:20px;width:100%}
 
-.game-title{font-size:clamp(1.2em,4.5vw,1.6em);color:#6a9ab8;text-align:center;margin-bottom:6px;opacity:0;transform:translateY(-10px)}
+.game-card{position:relative;width:88vw;max-width:420px;background:rgba(255,253,248,0.93);border-radius:50% / 7%;border:2px dashed #b8cfe0;padding:28px 22px;text-align:center;box-shadow:0 2px 20px rgba(0,0,0,0.06);display:flex;flex-direction:column;align-items:center}
+
+.game-title{font-size:1.05em;color:#5a7a8a;line-height:1.5;text-align:center;margin-bottom:4px;opacity:0;transform:translateY(-10px)}
 .game-title.vis{animation:su 0.5s ease forwards}
-.game-subtitle{font-size:clamp(0.85em,3vw,1em);color:#8ab4d0;text-align:center;margin-bottom:20px;opacity:0;transform:translateY(-10px)}
+.game-subtitle{font-size:1.05em;color:#5a7a8a;line-height:1.5;text-align:center;margin-bottom:20px;opacity:0;transform:translateY(-10px)}
 .game-subtitle.vis{animation:su 0.5s ease 0.15s forwards}
 
 /* Drop slots row */
@@ -172,24 +174,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   pointer-events:none;
   transform:scale(0.5);
 }
-
-/* Skip button */
-.skip-btn{
-  font-family:inherit;
-  font-size:clamp(0.85em,3vw,1em);
-  color:#8ab4d0;
-  background:transparent;
-  border:1.5px solid #b8cfe0;
-  padding:10px 28px;
-  border-radius:24px;
-  cursor:pointer;
-  margin-top:24px;
-  opacity:0;
-  animation:fi 0s ease 1.5s forwards;
-  -webkit-appearance:none;
-  transition:background 0.2s,color 0.2s;
-}
-.skip-btn:active{background:#8ab4d0;color:#fff}
 
 /* Name reveal after solve */
 .name-reveal{font-size:clamp(2.8em,11vw,5em);color:#6a9ab8;font-weight:bold;text-align:center;letter-spacing:clamp(2px,1vw,6px);text-shadow:2px 4px 8px rgba(106,154,184,0.25);opacity:0;transform:scale(0.5) rotate(-5deg);line-height:1.1}
@@ -268,7 +252,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 <div class="ln it">Μανιτάρη</div>
 </div>
 <div class="btns">
-<button class="ab" id="nameBtn"><span class="pulse-word">ΟΝΟΜΑ</span></button>
+<button class="ab" id="nameBtn">Βρείτε το <span class="pulse-word">ΟΝΟΜΑ</span> 🧩</button>
 <button class="ab" id="mapBtn">📍 Δείτε την τοποθεσία</button>
 <button class="ab" id="calBtn">📅 Προσθήκη στο Ημερολόγιο</button>
 <button class="nxt" id="nextBtn">Συνέχεια →</button>
@@ -282,12 +266,16 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 <div class="screen" id="screen4">
 <img class="bg-img" src="background.jpg" alt="background">
 <div class="s4-wrap" id="s4wrap">
-  <div class="game-title" id="gameTitle">Βρείτε το όνομά του!</div>
-  <div class="game-subtitle" id="gameSub">Σύρετε τα γράμματα στη σωστή σειρά</div>
-  <div class="drop-row" id="dropRow"></div>
-  <div class="drag-row" id="dragRow"></div>
-  <div class="name-reveal" id="nameReveal" style="display:none">ΠΟΡΦΥΡΙΟΣ</div>
-  <button class="skip-btn" id="skipBtn">Παράβλεψη →</button>
+  <div class="game-card" id="gameCard">
+    <div class="game-title" id="gameTitle">Βρείτε το όνομά του!</div>
+    <div class="game-subtitle" id="gameSub">Σύρετε τα γράμματα στη σωστή σειρά</div>
+    <div class="drop-row" id="dropRow"></div>
+    <div class="drag-row" id="dragRow"></div>
+    <div class="name-reveal" id="nameReveal" style="display:none">ΠΟΡΦΥΡΙΟΣ</div>
+  </div>
+  <div class="btns" id="gameBtns">
+    <button class="nxt" id="skipBtn" style="opacity:0;animation:fi 0s ease 1.5s forwards">Παράβλεψη →</button>
+  </div>
 </div>
 <button class="back-btn" id="backBtn4"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
 </div>
@@ -514,12 +502,15 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 
     // Reset UI
     document.getElementById('skipBtn').style.display = '';
+    document.getElementById('gameBtns').style.display = '';
     document.getElementById('nameReveal').style.display = 'none';
     document.getElementById('nameReveal').classList.remove('vis');
     document.getElementById('gameTitle').classList.remove('vis');
     document.getElementById('gameTitle').textContent = 'Βρείτε το όνομά του!';
+    document.getElementById('gameTitle').style.opacity = '';
     document.getElementById('gameSub').classList.remove('vis');
     document.getElementById('gameSub').style.display = '';
+    document.getElementById('gameSub').style.opacity = '';
   }
 
   function returnLetterFromSlot(idx){
@@ -572,7 +563,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
         confetti();
         document.getElementById('dropRow').style.display = 'none';
         document.getElementById('dragRow').style.display = 'none';
-        document.getElementById('skipBtn').style.display = 'none';
+        document.getElementById('gameBtns').style.display = 'none';
         document.getElementById('gameTitle').textContent = 'Βρήκατε το όνομά του!';
         document.getElementById('gameSub').style.display = 'none';
         var nr = document.getElementById('nameReveal');
@@ -598,14 +589,17 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     }
   }
 
-  // ── Drag & drop (touch + mouse) ──
+  // ── Drag & drop (touch + mouse) with tap-to-place ──
   function initDrag(tile){
     var startX, startY, origX, origY, isDragging = false;
     var clone = null;
+    var totalMoved = 0;
+    var TAP_THRESHOLD = 10; // pixels - below this counts as a tap
 
     function onStart(cx, cy){
       if(gameSolved || tile.classList.contains('placed')) return;
       isDragging = true;
+      totalMoved = 0;
       var rect = tile.getBoundingClientRect();
       origX = rect.left;
       origY = rect.top;
@@ -632,6 +626,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       if(!isDragging || !clone) return;
       var dx = cx - startX;
       var dy = cy - startY;
+      totalMoved = Math.max(totalMoved, Math.abs(dx) + Math.abs(dy));
       clone.style.left = (origX + dx) + 'px';
       clone.style.top = (origY + dy) + 'px';
 
@@ -658,7 +653,20 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
         dropSlots[i].classList.remove('hover');
       }
 
-      // Determine which slot we're over
+      // Was it a tap (minimal movement)?
+      if(totalMoved < TAP_THRESHOLD){
+        if(clone){ clone.remove(); clone = null; }
+        tile.style.opacity = '';
+        if(!tile.classList.contains('placed') && !gameSolved){
+          var emptySlot = findFirstEmptySlot();
+          if(emptySlot >= 0){
+            placeLetter(parseInt(tile.dataset.tileId), tile.dataset.letter, emptySlot);
+          }
+        }
+        return;
+      }
+
+      // Otherwise it was a drag - determine which slot we're over
       if(clone){
         var cloneRect = clone.getBoundingClientRect();
         var centerX = cloneRect.left + cloneRect.width / 2;
@@ -716,31 +724,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       document.addEventListener('mousemove', mm);
       document.addEventListener('mouseup', mu);
     });
-
-    // TAP to place in first empty slot
-    var tapTimer = null;
-    var tapMoved = false;
-    tile.addEventListener('touchstart', function(){
-      tapMoved = false;
-      tapTimer = setTimeout(function(){ tapMoved = true; }, 150);
-    }, {passive: true});
-    tile.addEventListener('touchmove', function(){ tapMoved = true; }, {passive: true});
-    tile.addEventListener('touchend', function(e2){
-      clearTimeout(tapTimer);
-      // Only treat as tap if no significant movement
-      if(!tapMoved && !tile.classList.contains('placed') && !gameSolved){
-        var emptySlot = findFirstEmptySlot();
-        if(emptySlot >= 0){
-          // small delay to not conflict with drag
-          setTimeout(function(){
-            if(!tile.classList.contains('placed')){
-              placeLetter(parseInt(tile.dataset.tileId), tile.dataset.letter, emptySlot);
-              tile.style.opacity = '';
-            }
-          }, 50);
-        }
-      }
-    }, {passive: true});
   }
 
   // SKIP button
@@ -766,7 +749,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       confetti();
       document.getElementById('dropRow').style.display = 'none';
       document.getElementById('dragRow').style.display = 'none';
-      document.getElementById('skipBtn').style.display = 'none';
+      document.getElementById('gameBtns').style.display = 'none';
       document.getElementById('gameTitle').textContent = 'Βρήκατε το όνομά του!';
       document.getElementById('gameSub').style.display = 'none';
       var nr = document.getElementById('nameReveal');
