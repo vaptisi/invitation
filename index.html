@@ -65,6 +65,15 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .ov-t{font-size:clamp(1.8em,6vw,2.6em);color:#6a9ab8;margin-bottom:20px}
 .ov-b{font-family:inherit;font-size:clamp(1.2em,4.5vw,1.6em);color:#fff;background:#8ab4d0;border:none;padding:16px 42px;border-radius:30px;cursor:pointer;box-shadow:0 4px 16px rgba(138,180,208,0.45);-webkit-appearance:none}
 
+/* ── Loading overlay ── */
+#loader{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(245,240,232,0.97);z-index:700;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0.3s ease}
+#loader.active{opacity:1;visibility:visible}
+.spinner{width:60px;height:60px;border:5px solid rgba(138,180,208,0.25);border-top-color:#8ab4d0;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text{margin-top:22px;font-size:clamp(1.1em,4vw,1.4em);color:#6a9ab8;letter-spacing:0.5px}
+.loader-text::after{content:'';display:inline-block;width:1em;text-align:left;animation:dots 1.4s steps(4,end) infinite}
+@keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+
 /* ── Screen 2 – Invitation card ── */
 #screen2{z-index:5;justify-content:center;padding:0}
 
@@ -144,6 +153,12 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 <button class="ov-b" id="goBtn">Πατήστε εδώ</button>
 </div>
 
+<!-- LOADING overlay -->
+<div id="loader">
+  <div class="spinner"></div>
+  <div class="loader-text">Φορτώνει</div>
+</div>
+
 <!-- SCREEN 2: Invitation card -->
 <div class="screen" id="screen2">
 <img class="bg-img" src="background.jpg" alt="background">
@@ -195,7 +210,11 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   // Copy bear image to small bear
   var bearSrc = document.querySelector('.bear-wrap img').src;
   document.getElementById('bearSmall').src = bearSrc;
- 
+
+  // ── Loader helpers ──
+  function showLoader(){ document.getElementById('loader').classList.add('active'); }
+  function hideLoader(){ document.getElementById('loader').classList.remove('active'); }
+
   // ── Auto-fit: scale wrappers to always fit the screen ──
   function autoFit(){
     var vh = window.innerHeight;
@@ -221,8 +240,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   window.addEventListener('orientationchange', function(){ setTimeout(autoFit, 200); });
   // Run after short delay to let fonts load
   setTimeout(autoFit, 100);
-  // Also run when screens become visible
-  var origShow2, origShow3;
  
   var tapped = false;
 
@@ -297,16 +314,25 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 
   // OVERLAY: Go button
   onTap(document.getElementById('goBtn'), function(){
+    // Hide the overlay and show the loader immediately
     document.getElementById('overlay').classList.remove('active');
+    showLoader();
+
+    // Short delay so the loader is visibly rendered, then switch screens
     setTimeout(function(){
       document.getElementById('screen1').classList.remove('active');
       document.getElementById('screen2').classList.add('active');
-	  autoFit();
+      autoFit();
+
+      // Give screen2's fade-in transition a moment, then hide loader
       setTimeout(function(){
-        document.getElementById('bearSmall').classList.add('v');
-      }, 350);
-      animateCard();
-    }, 350);
+        hideLoader();
+        setTimeout(function(){
+          document.getElementById('bearSmall').classList.add('v');
+        }, 100);
+        animateCard();
+      }, 750); // matches the .screen opacity transition (0.7s)
+    }, 300);
   });
 
   // ── Shared location (same for map button AND calendar) ──
@@ -356,14 +382,18 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 
   // NEXT button -> Screen 3
   onTap(document.getElementById('nextBtn'), function(){
+    showLoader();
     document.getElementById('screen2').classList.remove('active');
     setTimeout(function(){
       document.getElementById('screen3').classList.add('active');
-	  autoFit();
-      setTimeout(function(){ document.getElementById('finalText').classList.add('vis'); }, 200);
-      setTimeout(function(){ document.getElementById('finalBear').classList.add('vis'); }, 500);
-	  setTimeout(function(){ document.getElementById('countdown').classList.add('vis'); }, 350);
-    }, 400);
+      autoFit();
+      setTimeout(function(){
+        hideLoader();
+        setTimeout(function(){ document.getElementById('finalText').classList.add('vis'); }, 100);
+        setTimeout(function(){ document.getElementById('finalBear').classList.add('vis'); }, 400);
+        setTimeout(function(){ document.getElementById('countdown').classList.add('vis'); }, 250);
+      }, 750);
+    }, 300);
   });
 
   // BACK button -> Screen 2
