@@ -528,12 +528,14 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   var calLocation = 'Ιερός Ναός Ευαγγελισμού της Θεοτόκου, Πριάμου 123, Ίλιον';
   var calStart = '20260517T100000Z';
   var calEnd   = '20260517T120000Z';
+  var calDescription = 'Δείτε την πρόσκληση εδώ: https://vaptisi-invitation.gr/';
 
   function openGoogleCal(){
     var url = 'https://www.google.com/calendar/render?action=TEMPLATE'
       + '&text=' + encodeURIComponent(calTitle)
       + '&dates=' + calStart + '/' + calEnd
-      + '&location=' + encodeURIComponent(calLocation);
+      + '&location=' + encodeURIComponent(calLocation)
+      + '&details=' + encodeURIComponent(calDescription);
     window.open(url, '_blank');
   }
 
