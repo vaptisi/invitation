@@ -49,12 +49,12 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 @keyframes fi{to{opacity:1}}
 
-/* Pulsing "Μπαλόνι" word - only animates after user taps the hint */
+/* Pulsing "Μπαλόνι" word */
 .hint .pulse-word{display:inline-block;transform-origin:center}
 .hint.active-hint .pulse-word{animation:pulseWord 1.2s ease-in-out infinite}
 @keyframes pulseWord{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
 
-/* Pulsing "ΟΝΟΜΑ" word - always animating */
+/* Pulsing "ΟΝΟΜΑ" word */
 #nameBtn .pulse-word{display:inline-block;transform-origin:center;animation:pulseWord 1.2s ease-in-out infinite}
 
 /* ── Confetti ── */
@@ -101,7 +101,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .btns{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:14px;width:88vw;max-width:420px}
 .ab{font-family:inherit;font-size:1.05em;color:#fff;background:linear-gradient(135deg,#8ab4d0,#6a9ab8);border:none;padding:13px 22px;border-radius:28px;cursor:pointer;width:100%;box-shadow:0 3px 12px rgba(138,180,208,0.4);-webkit-appearance:none}
 .ab:active{transform:scale(0.97)}
-.ab.name-btn{background:linear-gradient(135deg,#d4a5c8,#b88ab0);box-shadow:0 3px 12px rgba(184,138,176,0.4)}
 .nxt{font-family:inherit;font-size:1.05em;color:#8ab4d0;background:rgba(255,253,248,0.95);border:2px solid #b8cfe0;padding:11px 32px;border-radius:28px;cursor:pointer;width:100%;-webkit-appearance:none}
 
 /* ── Screen 3 – Final ── */
@@ -114,9 +113,85 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 @keyframes popIn{to{opacity:1;transform:scale(1)}}
 @keyframes riseUp{to{opacity:1;transform:translateY(0)}}
 
-/* ── Screen 4 – Name reveal ── */
+/* ── Screen 4 – Anagram Game ── */
 #screen4{z-index:6}
-.s4-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;transform-origin:center center;padding:20px}
+.s4-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;transform-origin:center center;padding:20px;width:100%}
+
+.game-title{font-size:clamp(1.2em,4.5vw,1.6em);color:#6a9ab8;text-align:center;margin-bottom:6px;opacity:0;transform:translateY(-10px)}
+.game-title.vis{animation:su 0.5s ease forwards}
+.game-subtitle{font-size:clamp(0.85em,3vw,1em);color:#8ab4d0;text-align:center;margin-bottom:20px;opacity:0;transform:translateY(-10px)}
+.game-subtitle.vis{animation:su 0.5s ease 0.15s forwards}
+
+/* Drop slots row */
+.drop-row{display:flex;gap:clamp(4px,1.2vw,8px);justify-content:center;margin-bottom:24px}
+.drop-slot{
+  width:clamp(32px,9vw,48px);
+  height:clamp(38px,10.5vw,56px);
+  border:2.5px dashed #b8cfe0;
+  border-radius:12px;
+  background:rgba(255,253,248,0.7);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(1.2em,4.5vw,1.7em);
+  color:#6a9ab8;font-weight:bold;
+  transition:border-color 0.2s,background 0.2s,transform 0.15s;
+  position:relative;
+}
+.drop-slot.hover{border-color:#8ab4d0;background:rgba(138,180,208,0.15);transform:scale(1.08)}
+.drop-slot.filled{border-style:solid;border-color:#8ab4d0;background:rgba(138,180,208,0.12)}
+.drop-slot.correct{border-color:#7bc67e;background:rgba(123,198,126,0.15);animation:slotPop 0.35s ease}
+.drop-slot.wrong{animation:slotShake 0.4s ease}
+@keyframes slotPop{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes slotShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+/* Drag tiles row */
+.drag-row{display:flex;flex-wrap:wrap;gap:clamp(6px,1.5vw,10px);justify-content:center;max-width:92vw}
+.drag-tile{
+  width:clamp(36px,9.5vw,52px);
+  height:clamp(42px,11vw,58px);
+  background:linear-gradient(145deg,#8ab4d0,#6a9ab8);
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(1.3em,4.8vw,1.8em);
+  color:#fff;font-weight:bold;
+  cursor:grab;
+  box-shadow:0 3px 12px rgba(106,154,184,0.35);
+  transition:transform 0.15s,opacity 0.2s,box-shadow 0.15s;
+  touch-action:none;
+  position:relative;
+  z-index:10;
+}
+.drag-tile:active{cursor:grabbing}
+.drag-tile.dragging{
+  opacity:0.85;
+  transform:scale(1.12);
+  box-shadow:0 8px 24px rgba(106,154,184,0.45);
+  z-index:100;
+}
+.drag-tile.placed{
+  opacity:0;
+  pointer-events:none;
+  transform:scale(0.5);
+}
+
+/* Skip button */
+.skip-btn{
+  font-family:inherit;
+  font-size:clamp(0.85em,3vw,1em);
+  color:#8ab4d0;
+  background:transparent;
+  border:1.5px solid #b8cfe0;
+  padding:10px 28px;
+  border-radius:24px;
+  cursor:pointer;
+  margin-top:24px;
+  opacity:0;
+  animation:fi 0s ease 1.5s forwards;
+  -webkit-appearance:none;
+  transition:background 0.2s,color 0.2s;
+}
+.skip-btn:active{background:#8ab4d0;color:#fff}
+
+/* Name reveal after solve */
 .name-reveal{font-size:clamp(2.8em,11vw,5em);color:#6a9ab8;font-weight:bold;text-align:center;letter-spacing:clamp(2px,1vw,6px);text-shadow:2px 4px 8px rgba(106,154,184,0.25);opacity:0;transform:scale(0.5) rotate(-5deg);line-height:1.1}
 .name-reveal.vis{animation:nameBurst 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards}
 @keyframes nameBurst{
@@ -150,7 +225,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 <body>
 
 <img class="bg-img" src="background.jpg" alt="background">
-
 
 <!-- SCREEN 1: Tap the balloon -->
 <div class="screen active" id="screen1">
@@ -204,11 +278,16 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 <img class="bsm" id="bearSmall" src="" alt="bear">
 </div>
 
-<!-- SCREEN 4: Name reveal -->
+<!-- SCREEN 4: Anagram Game -->
 <div class="screen" id="screen4">
 <img class="bg-img" src="background.jpg" alt="background">
 <div class="s4-wrap" id="s4wrap">
-<div class="name-reveal" id="nameReveal">ΠΟΡΦΥΡΙΟΣ</div>
+  <div class="game-title" id="gameTitle">Βρείτε το όνομά του!</div>
+  <div class="game-subtitle" id="gameSub">Σύρετε τα γράμματα στη σωστή σειρά</div>
+  <div class="drop-row" id="dropRow"></div>
+  <div class="drag-row" id="dragRow"></div>
+  <div class="name-reveal" id="nameReveal" style="display:none">ΠΟΡΦΥΡΙΟΣ</div>
+  <button class="skip-btn" id="skipBtn">Παράβλεψη →</button>
 </div>
 <button class="back-btn" id="backBtn4"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
 </div>
@@ -223,52 +302,42 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   <div class="cd-box"><div class="cd-num" id="cdMins">0</div><div class="cd-label">λεπτά</div></div>
   <div class="cd-box"><div class="cd-num" id="cdSecs">0</div><div class="cd-label">δευτ.</div></div>
 </div>
-
 <img class="final-bear" id="finalBear" src="clothes.gif" alt="clothes">
-
 </div>
 <button class="back-btn" id="backBtn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
 </div>
 
 <script>
 (function(){
-  // Copy bear image to small bear
   var bearSrc = document.querySelector('.bear-wrap img').src;
   document.getElementById('bearSmall').src = bearSrc;
 
-  // ── Loader helpers ──
   function showLoader(){ document.getElementById('loader').classList.add('active'); }
   function hideLoader(){ document.getElementById('loader').classList.remove('active'); }
 
-  // ── Auto-fit: scale wrappers to always fit the screen ──
+  // ── Auto-fit ──
   function autoFit(){
     var vh = window.innerHeight;
     var vw = window.innerWidth;
-    var pad = 30; // breathing room px
- 
+    var pad = 30;
     ['s2wrap','s3wrap','s4wrap'].forEach(function(id){
       var el = document.getElementById(id);
       if(!el) return;
-      // reset scale to measure natural size
       el.style.transform = 'scale(1)';
       var rect = el.getBoundingClientRect();
       var scaleH = (vh - pad*2) / rect.height;
       var scaleW = (vw - pad*2) / rect.width;
-      var s = Math.min(scaleH, scaleW, 1.15); // never scale above 1.15x
-      if(s < 0.5) s = 0.5; // never too tiny
+      var s = Math.min(scaleH, scaleW, 1.15);
+      if(s < 0.5) s = 0.5;
       el.style.transform = 'scale(' + s + ')';
     });
   }
- 
-  // Run on load, resize, orientation change
   window.addEventListener('resize', autoFit);
   window.addEventListener('orientationchange', function(){ setTimeout(autoFit, 200); });
-  // Run after short delay to let fonts load
   setTimeout(autoFit, 100);
- 
+
   var tapped = false;
 
-  // Helper: add both click and touchend
   function onTap(el, fn){
     var fired = false;
     el.addEventListener('touchend', function(e){
@@ -283,7 +352,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     });
   }
 
-  // Confetti burst
   function confetti(){
     var cols = ['#8ab4d0','#ffffff','#e8dcc8','#b8cfe0','#d4e4ee'];
     var fr = document.createDocumentFragment();
@@ -304,7 +372,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     requestAnimationFrame(function(){
       for(var j=0;j<newEls.length;j++) newEls[j].classList.add('go');
     });
-    // Remove only the pieces from THIS burst, not all confetti on page
     setTimeout(function(){
       for(var j=newEls.length-1;j>=0;j--){
         if(newEls[j].parentNode) newEls[j].remove();
@@ -312,7 +379,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     }, 2500);
   }
 
-  // Animate card lines
   function animateCard(){
     var lines = document.querySelectorAll('#card .ln');
     for(var i=0; i<lines.length; i++){
@@ -334,51 +400,37 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     }, 700);
   });
 
-  // HINT button: user tapped the text instead of the balloon — pulse the word
   onTap(document.getElementById('hint'), function(){
     if(tapped) return;
     document.getElementById('hint').classList.add('active-hint');
   });
 
-  // OVERLAY: Go button
+  // OVERLAY: Go
   onTap(document.getElementById('goBtn'), function(){
-    // Hide the overlay and show the loader immediately
     document.getElementById('overlay').classList.remove('active');
     showLoader();
-
-    // Short delay so the loader is visibly rendered, then switch screens
     setTimeout(function(){
       document.getElementById('screen1').classList.remove('active');
       document.getElementById('screen2').classList.add('active');
       autoFit();
-
-      // Give screen2's fade-in transition a moment, then hide loader
       setTimeout(function(){
         hideLoader();
         setTimeout(function(){
           document.getElementById('bearSmall').classList.add('v');
         }, 100);
         animateCard();
-      }, 750); // matches the .screen opacity transition (0.7s)
+      }, 750);
     }, 300);
   });
 
-  // ── Shared location (same for map button AND calendar) ──
   var mapUrl = 'https://maps.app.goo.gl/JxJXRsj9sPENY9CFA';
+  onTap(document.getElementById('mapBtn'), function(){ window.open(mapUrl,'_blank'); });
 
-  // MAP button
-  onTap(document.getElementById('mapBtn'), function(){
-    window.open(mapUrl,'_blank');
-  });
-
-  // CALENDAR button
   var calTitle = 'Βάπτιση Πορφυρίου';
-  // Use the real postal address so Google Calendar can geocode it and show a map preview.
-  // (Short maps.app.goo.gl links are treated as plain text and produce no preview.)
   var calLocation = 'Ιερός Ναός Ευαγγελισμού της Θεοτόκου, Πριάμου 123, Ίλιον';
   var calStart = '20260517T100000Z';
   var calEnd   = '20260517T120000Z';
- 
+
   function openGoogleCal(){
     var url = 'https://www.google.com/calendar/render?action=TEMPLATE'
       + '&text=' + encodeURIComponent(calTitle)
@@ -386,48 +438,368 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       + '&location=' + encodeURIComponent(calLocation);
     window.open(url, '_blank');
   }
- 
+
   function showCalModal(){ document.getElementById('calModal').classList.add('active'); }
   function hideCalModal(){ document.getElementById('calModal').classList.remove('active'); }
- 
-  // CALENDAR button - always show modal with Google Calendar option
-  onTap(document.getElementById('calBtn'), function(){
-    showCalModal();
-  });
- 
-  // Modal buttons
-  onTap(document.getElementById('calGoogle'), function(){
-    hideCalModal();
-    openGoogleCal();
-  });
-  onTap(document.getElementById('calClose'), function(){
-    hideCalModal();
-  });
-  // Tap outside to close
+
+  onTap(document.getElementById('calBtn'), function(){ showCalModal(); });
+  onTap(document.getElementById('calGoogle'), function(){ hideCalModal(); openGoogleCal(); });
+  onTap(document.getElementById('calClose'), function(){ hideCalModal(); });
   document.getElementById('calModal').addEventListener('click', function(e){
     if(e.target === this) hideCalModal();
   });
 
-  // NAME button -> Screen 4 (name reveal with confetti)
+  // ══════════════════════════════════════════════
+  //  ANAGRAM GAME
+  // ══════════════════════════════════════════════
+  var NAME = 'ΠΟΡΦΥΡΙΟΣ';
+  var letters = NAME.split('');
+  var gameSolved = false;
+  var placed = []; // array of letters placed in slots (null if empty)
+  var dragTiles = [];
+  var dropSlots = [];
+
+  function shuffleArray(arr){
+    var a = arr.slice();
+    // Fisher-Yates, but ensure it's not already in order
+    for(var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    // If shuffle produced the original order, swap first two
+    if(a.join('') === NAME){ var tmp = a[0]; a[0] = a[1]; a[1] = tmp; }
+    return a;
+  }
+
+  function buildGame(){
+    gameSolved = false;
+    placed = [];
+    var dropRow = document.getElementById('dropRow');
+    var dragRow = document.getElementById('dragRow');
+    dropRow.innerHTML = '';
+    dragRow.innerHTML = '';
+    dropSlots = [];
+    dragTiles = [];
+
+    // Build drop slots
+    for(var i = 0; i < letters.length; i++){
+      var slot = document.createElement('div');
+      slot.className = 'drop-slot';
+      slot.dataset.index = i;
+      placed.push(null);
+      dropRow.appendChild(slot);
+      dropSlots.push(slot);
+
+      // Tap on filled slot to return letter
+      (function(idx, slotEl){
+        onTap(slotEl, function(){
+          if(gameSolved) return;
+          returnLetterFromSlot(idx);
+        });
+      })(i, slot);
+    }
+
+    // Build drag tiles (shuffled)
+    var shuffled = shuffleArray(letters);
+    for(var j = 0; j < shuffled.length; j++){
+      var tile = document.createElement('div');
+      tile.className = 'drag-tile';
+      tile.textContent = shuffled[j];
+      tile.dataset.letter = shuffled[j];
+      tile.dataset.tileId = j;
+      dragRow.appendChild(tile);
+      dragTiles.push(tile);
+      initDrag(tile);
+    }
+
+    // Reset UI
+    document.getElementById('skipBtn').style.display = '';
+    document.getElementById('nameReveal').style.display = 'none';
+    document.getElementById('nameReveal').classList.remove('vis');
+    document.getElementById('gameTitle').classList.remove('vis');
+    document.getElementById('gameTitle').textContent = 'Βρείτε το όνομά του!';
+    document.getElementById('gameSub').classList.remove('vis');
+    document.getElementById('gameSub').style.display = '';
+  }
+
+  function returnLetterFromSlot(idx){
+    if(placed[idx] === null) return;
+    var tileId = placed[idx].tileId;
+    placed[idx] = null;
+    dropSlots[idx].textContent = '';
+    dropSlots[idx].classList.remove('filled','correct');
+    // Un-hide the drag tile
+    var tile = dragTiles[tileId];
+    tile.classList.remove('placed');
+  }
+
+  function findFirstEmptySlot(){
+    for(var i = 0; i < placed.length; i++){
+      if(placed[i] === null) return i;
+    }
+    return -1;
+  }
+
+  function placeLetter(tileId, letter, slotIdx){
+    if(slotIdx < 0 || slotIdx >= placed.length) return false;
+    if(placed[slotIdx] !== null) return false;
+    placed[slotIdx] = { tileId: tileId, letter: letter };
+    dropSlots[slotIdx].textContent = letter;
+    dropSlots[slotIdx].classList.add('filled');
+    dragTiles[tileId].classList.add('placed');
+    checkSolved();
+    return true;
+  }
+
+  function checkSolved(){
+    // Check if all slots are filled
+    for(var i = 0; i < placed.length; i++){
+      if(placed[i] === null) return;
+    }
+    // Check if correct
+    var word = '';
+    for(var j = 0; j < placed.length; j++){
+      word += placed[j].letter;
+    }
+    if(word === NAME){
+      gameSolved = true;
+      // Mark all correct
+      for(var k = 0; k < dropSlots.length; k++){
+        dropSlots[k].classList.add('correct');
+      }
+      // Victory sequence
+      setTimeout(function(){
+        confetti();
+        document.getElementById('dropRow').style.display = 'none';
+        document.getElementById('dragRow').style.display = 'none';
+        document.getElementById('skipBtn').style.display = 'none';
+        document.getElementById('gameTitle').textContent = 'Βρήκατε το όνομά του!';
+        document.getElementById('gameSub').style.display = 'none';
+        var nr = document.getElementById('nameReveal');
+        nr.style.display = '';
+        setTimeout(function(){ nr.classList.add('vis'); }, 100);
+        setTimeout(function(){ confetti(); }, 500);
+        autoFit();
+      }, 500);
+    } else {
+      // Wrong order – shake all slots briefly, then return all letters
+      for(var m = 0; m < dropSlots.length; m++){
+        dropSlots[m].classList.add('wrong');
+      }
+      setTimeout(function(){
+        for(var m = 0; m < dropSlots.length; m++){
+          dropSlots[m].classList.remove('wrong');
+        }
+        // Return all letters to pool
+        for(var n = placed.length - 1; n >= 0; n--){
+          returnLetterFromSlot(n);
+        }
+      }, 450);
+    }
+  }
+
+  // ── Drag & drop (touch + mouse) ──
+  function initDrag(tile){
+    var startX, startY, origX, origY, isDragging = false;
+    var clone = null;
+
+    function onStart(cx, cy){
+      if(gameSolved || tile.classList.contains('placed')) return;
+      isDragging = true;
+      var rect = tile.getBoundingClientRect();
+      origX = rect.left;
+      origY = rect.top;
+      startX = cx;
+      startY = cy;
+
+      // Create a floating clone for dragging
+      clone = tile.cloneNode(true);
+      clone.style.position = 'fixed';
+      clone.style.left = origX + 'px';
+      clone.style.top = origY + 'px';
+      clone.style.width = rect.width + 'px';
+      clone.style.height = rect.height + 'px';
+      clone.style.zIndex = '999';
+      clone.style.pointerEvents = 'none';
+      clone.style.transition = 'none';
+      clone.classList.add('dragging');
+      document.body.appendChild(clone);
+
+      tile.style.opacity = '0.3';
+    }
+
+    function onMove(cx, cy){
+      if(!isDragging || !clone) return;
+      var dx = cx - startX;
+      var dy = cy - startY;
+      clone.style.left = (origX + dx) + 'px';
+      clone.style.top = (origY + dy) + 'px';
+
+      // Highlight slot under finger
+      var cloneRect = clone.getBoundingClientRect();
+      var centerX = cloneRect.left + cloneRect.width / 2;
+      var centerY = cloneRect.top + cloneRect.height / 2;
+      for(var i = 0; i < dropSlots.length; i++){
+        var sr = dropSlots[i].getBoundingClientRect();
+        if(centerX >= sr.left && centerX <= sr.right && centerY >= sr.top && centerY <= sr.bottom && placed[i] === null){
+          dropSlots[i].classList.add('hover');
+        } else {
+          dropSlots[i].classList.remove('hover');
+        }
+      }
+    }
+
+    function onEnd(cx, cy){
+      if(!isDragging) return;
+      isDragging = false;
+
+      // Remove all hover states
+      for(var i = 0; i < dropSlots.length; i++){
+        dropSlots[i].classList.remove('hover');
+      }
+
+      // Determine which slot we're over
+      if(clone){
+        var cloneRect = clone.getBoundingClientRect();
+        var centerX = cloneRect.left + cloneRect.width / 2;
+        var centerY = cloneRect.top + cloneRect.height / 2;
+        var targetSlot = -1;
+        for(var j = 0; j < dropSlots.length; j++){
+          var sr = dropSlots[j].getBoundingClientRect();
+          if(centerX >= sr.left && centerX <= sr.right && centerY >= sr.top && centerY <= sr.bottom && placed[j] === null){
+            targetSlot = j;
+            break;
+          }
+        }
+
+        clone.remove();
+        clone = null;
+
+        if(targetSlot >= 0){
+          placeLetter(parseInt(tile.dataset.tileId), tile.dataset.letter, targetSlot);
+          tile.style.opacity = '';
+        } else {
+          tile.style.opacity = '';
+        }
+      } else {
+        tile.style.opacity = '';
+      }
+    }
+
+    // Touch events
+    tile.addEventListener('touchstart', function(e){
+      e.preventDefault();
+      var t = e.touches[0];
+      onStart(t.clientX, t.clientY);
+    }, {passive: false});
+    tile.addEventListener('touchmove', function(e){
+      e.preventDefault();
+      var t = e.touches[0];
+      onMove(t.clientX, t.clientY);
+    }, {passive: false});
+    tile.addEventListener('touchend', function(e){
+      e.preventDefault();
+      var t = e.changedTouches[0];
+      onEnd(t.clientX, t.clientY);
+    }, {passive: false});
+
+    // Mouse events
+    tile.addEventListener('mousedown', function(e){
+      e.preventDefault();
+      onStart(e.clientX, e.clientY);
+      function mm(ev){ onMove(ev.clientX, ev.clientY); }
+      function mu(ev){
+        onEnd(ev.clientX, ev.clientY);
+        document.removeEventListener('mousemove', mm);
+        document.removeEventListener('mouseup', mu);
+      }
+      document.addEventListener('mousemove', mm);
+      document.addEventListener('mouseup', mu);
+    });
+
+    // TAP to place in first empty slot
+    var tapTimer = null;
+    var tapMoved = false;
+    tile.addEventListener('touchstart', function(){
+      tapMoved = false;
+      tapTimer = setTimeout(function(){ tapMoved = true; }, 150);
+    }, {passive: true});
+    tile.addEventListener('touchmove', function(){ tapMoved = true; }, {passive: true});
+    tile.addEventListener('touchend', function(e2){
+      clearTimeout(tapTimer);
+      // Only treat as tap if no significant movement
+      if(!tapMoved && !tile.classList.contains('placed') && !gameSolved){
+        var emptySlot = findFirstEmptySlot();
+        if(emptySlot >= 0){
+          // small delay to not conflict with drag
+          setTimeout(function(){
+            if(!tile.classList.contains('placed')){
+              placeLetter(parseInt(tile.dataset.tileId), tile.dataset.letter, emptySlot);
+              tile.style.opacity = '';
+            }
+          }, 50);
+        }
+      }
+    }, {passive: true});
+  }
+
+  // SKIP button
+  onTap(document.getElementById('skipBtn'), function(){
+    if(gameSolved) return;
+    gameSolved = true;
+    // Place all correct letters
+    for(var i = 0; i < letters.length; i++){
+      // Return anything in slot first
+      if(placed[i] !== null) returnLetterFromSlot(i);
+    }
+    // Hide tiles
+    for(var j = 0; j < dragTiles.length; j++){
+      dragTiles[j].classList.add('placed');
+    }
+    // Fill slots with correct letters
+    for(var k = 0; k < letters.length; k++){
+      placed[k] = { tileId: -1, letter: letters[k] };
+      dropSlots[k].textContent = letters[k];
+      dropSlots[k].classList.add('filled','correct');
+    }
+    setTimeout(function(){
+      confetti();
+      document.getElementById('dropRow').style.display = 'none';
+      document.getElementById('dragRow').style.display = 'none';
+      document.getElementById('skipBtn').style.display = 'none';
+      document.getElementById('gameTitle').textContent = 'Βρήκατε το όνομά του!';
+      document.getElementById('gameSub').style.display = 'none';
+      var nr = document.getElementById('nameReveal');
+      nr.style.display = '';
+      setTimeout(function(){ nr.classList.add('vis'); }, 100);
+      setTimeout(function(){ confetti(); }, 500);
+      autoFit();
+    }, 400);
+  });
+
+  // NAME button -> Screen 4
   onTap(document.getElementById('nameBtn'), function(){
     showLoader();
     document.getElementById('screen2').classList.remove('active');
     document.getElementById('bearSmall').classList.remove('v');
     setTimeout(function(){
+      // Reset game
+      document.getElementById('dropRow').style.display = '';
+      document.getElementById('dragRow').style.display = '';
+      document.getElementById('gameTitle').style.opacity = '';
+      document.getElementById('gameSub').style.opacity = '';
+      buildGame();
       document.getElementById('screen4').classList.add('active');
       autoFit();
       setTimeout(function(){
         hideLoader();
-        // Single burst of confetti on name reveal
-        confetti();
-        setTimeout(function(){ document.getElementById('nameReveal').classList.add('vis'); }, 400);
-        // Second burst for extra effect
-        setTimeout(function(){ confetti(); }, 600);
+        document.getElementById('gameTitle').classList.add('vis');
+        document.getElementById('gameSub').classList.add('vis');
       }, 750);
     }, 300);
   });
 
-  // BACK button from Screen 4 -> Screen 2
+  // BACK from Screen 4 -> Screen 2
   onTap(document.getElementById('backBtn4'), function(){
     document.getElementById('screen4').classList.remove('active');
     document.getElementById('nameReveal').classList.remove('vis');
@@ -456,16 +828,16 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     }, 300);
   });
 
-  // BACK button -> Screen 2
+  // BACK -> Screen 2
   onTap(document.getElementById('backBtn'), function(){
     document.getElementById('screen3').classList.remove('active');
-	autoFit();
+    autoFit();
     document.getElementById('finalText').classList.remove('vis');
     document.getElementById('finalBear').classList.remove('vis');
-	document.getElementById('countdown').classList.remove('vis');
+    document.getElementById('countdown').classList.remove('vis');
     setTimeout(function(){
       document.getElementById('screen2').classList.add('active');
-	  autoFit();
+      autoFit();
     }, 300);
   });
 
@@ -479,14 +851,16 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
       document.getElementById('hint').classList.remove('active-hint');
     }, 300);
   });
+
+  // Countdown
   var targetDate = new Date('2026-05-17T13:10:30+03:00');
   function updateCountdown(){
     var diff = targetDate - new Date();
     if(diff <= 0){ diff = 0; }
-		document.getElementById('cdDays').textContent = Math.floor(diff / 86400000);
-		document.getElementById('cdHours').textContent = Math.floor((diff % 86400000) / 3600000);
-		document.getElementById('cdMins').textContent = Math.floor((diff % 3600000) / 60000);
-		document.getElementById('cdSecs').textContent = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cdDays').textContent = Math.floor(diff / 86400000);
+    document.getElementById('cdHours').textContent = Math.floor((diff % 86400000) / 3600000);
+    document.getElementById('cdMins').textContent = Math.floor((diff % 3600000) / 60000);
+    document.getElementById('cdSecs').textContent = Math.floor((diff % 60000) / 1000);
   }
   updateCountdown();
   setInterval(updateCountdown, 1000);
