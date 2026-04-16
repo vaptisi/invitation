@@ -222,7 +222,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 
 /* Post-solve action buttons inside game card */
 .solve-actions{display:none;flex-direction:column;gap:10px;margin-top:18px;width:100%;align-items:center}
-.solve-actions.vis{display:flex;animation:su 0.5s ease 0.6s both}
+.solve-actions.vis{display:flex;animation:su 0.4s ease both}
 
 /* ── Screen 5 – Saint info ── */
 #screen5{z-index:7}
@@ -665,12 +665,13 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
     document.getElementById('gameSub').style.display = 'none';
     var nr = document.getElementById('nameReveal');
     nr.style.display = '';
-    setTimeout(function(){ nr.classList.add('vis'); }, 100);
-    setTimeout(function(){ confetti(); }, 500);
-    setTimeout(function(){
+    // Show name reveal AND action buttons together on the next frame
+    requestAnimationFrame(function(){
+      nr.classList.add('vis');
       document.getElementById('solveActions').classList.add('vis');
       autoFit();
-    }, 800);
+    });
+    setTimeout(function(){ confetti(); }, 500);
     autoFit();
   }
 
