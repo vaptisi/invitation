@@ -28,35 +28,28 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .bg-img{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0}
 .content-wrap{position:relative;z-index:10;width:100%;display:flex;flex-direction:column;align-items:center;padding:0 16px}
 .info-card{position:relative;width:100%;max-width:520px;background:rgba(255,253,248,0.93);border-radius:50% / 4%;border:2px dashed #b8cfe0;padding:32px 26px;text-align:left;box-shadow:0 2px 20px rgba(0,0,0,0.08)}
-.info-title{font-size:1.35em;color:#5a7a8a;font-weight:bold;text-align:center;margin-bottom:8px;line-height:1.3;opacity:0;transform:translateY(-10px)}
-.info-title.vis{animation:su 0.5s ease forwards}
-.info-sub{font-size:1em;color:#8ab4d0;text-align:center;margin-bottom:22px;font-style:italic;opacity:0;transform:translateY(-10px)}
-.info-sub.vis{animation:su 0.5s ease 0.1s forwards}
-.info-para{font-size:1em;color:#5a7a8a;line-height:1.7;margin-bottom:14px;text-align:justify;opacity:0;transform:translateY(10px)}
-.info-para.vis{animation:su 0.5s ease forwards}
+.info-title{font-size:1.35em;color:#5a7a8a;font-weight:bold;text-align:center;margin-bottom:8px;line-height:1.3}
+.info-sub{font-size:1em;color:#8ab4d0;text-align:center;margin-bottom:22px;font-style:italic}
+.info-para{font-size:1em;color:#5a7a8a;line-height:1.7;margin-bottom:14px;text-align:justify}
 .info-para .highlight{color:#6a9ab8;font-weight:bold}
 .info-para .quote{font-style:italic;color:#6a9ab8;font-weight:bold}
-.divider{width:60%;height:1px;background:linear-gradient(90deg,transparent,#b8cfe0,transparent);margin:18px auto;opacity:0}
-.divider.vis{animation:su 0.5s ease forwards}
-.footnote{font-size:0.9em;color:#7a92a3;line-height:1.6;margin-bottom:10px;text-align:justify;opacity:0;transform:translateY(10px);font-style:italic}
-.footnote.vis{animation:su 0.5s ease forwards}
-.btns{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:24px;width:100%;max-width:520px;opacity:0;transform:translateY(10px)}
-.btns.vis{animation:su 0.5s ease forwards}
+.divider{width:60%;height:1px;background:linear-gradient(90deg,transparent,#b8cfe0,transparent);margin:18px auto}
+.footnote{font-size:0.9em;color:#7a92a3;line-height:1.6;margin-bottom:10px;text-align:justify;font-style:italic}
+.btns{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:24px;width:100%;max-width:520px}
 .hymn-btn{font-family:inherit;font-size:1.05em;color:#fff;background:linear-gradient(135deg,#8ab4d0,#6a9ab8);border:none;padding:14px 26px;border-radius:28px;cursor:pointer;width:100%;box-shadow:0 3px 12px rgba(138,180,208,0.4);-webkit-appearance:none;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:10px;transition:transform 0.15s}
 .hymn-btn:active{transform:scale(0.97)}
 .hymn-btn svg{width:20px;height:20px;stroke:#fff;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
-@keyframes su{to{opacity:1;transform:translateY(0)}}
 .copyright-footer{position:fixed;bottom:4px;left:0;right:0;text-align:center;font-size:10px;color:rgba(90,122,138,0.75);z-index:9998;font-family:'Segoe Print',cursive;letter-spacing:0.3px;pointer-events:none;text-shadow:0 1px 3px rgba(255,253,248,0.95),0 0 6px rgba(255,253,248,0.8)}
 </style>
 </head>
 <body>
 
-<img class="bg-img" src="../background.jpg" alt="background">
+<img class="bg-img" src="background.jpg" alt="background">
 
 <div class="content-wrap">
   <div class="info-card">
-    <div class="info-title" id="t1">Ιεροψάλτης</div>
-    <div class="info-sub" id="t2">Μυστήριο της Βάπτισης</div>
+    <div class="info-title">Ιεροψάλτης</div>
+    <div class="info-sub">Μυστήριο της Βάπτισης</div>
 
     <div class="info-para"><span class="highlight">Σας ευχαριστούμε</span>, για την διακονία σας, στο Ιερό Αναλόγιο, στη Βάπτιση του γιού μας.</div>
 
@@ -75,7 +68,7 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 	<div class="info-para"><span class="footnote">Μπορείτε να κατεβάσετε τα αρχεία στο κινητό σας, αλλά και να μοιράσετε το link σε όσους βρεθούν στο αναλόγιο. (Έχω ανοιχτό το WiFi του κινητού μου για να συνδεθεί όποιος θέλει. Name: iPhone-George Password: 123456789</span></div>
   </div>
 
-  <div class="btns" id="btns">
+  <div class="btns">
     <a class="hymn-btn" href="kyrie-eleison/index.html">
       <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       Κύριε Ελέησον
@@ -102,31 +95,5 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 
 <div class="copyright-footer">© 2026 Γ. Μπαστούνης · Original code &amp; design</div>
 
-<script>
-/*!
- * © 2026 Georgios Bastounis. All rights reserved.
- * https://vaptisi-invitation.gr/
- */
-(function(){
-  function animateIn(){
-    document.getElementById('t1').classList.add('vis');
-    document.getElementById('t2').classList.add('vis');
-    var paras = document.querySelectorAll('.info-para');
-    for(var i = 0; i < paras.length; i++){
-      (function(el, idx){ setTimeout(function(){ el.classList.add('vis'); }, 200 + idx * 150); })(paras[i], i);
-    }
-    var div = document.querySelector('.divider');
-    if(div) setTimeout(function(){ div.classList.add('vis'); }, 200 + paras.length * 150);
-    var notes = document.querySelectorAll('.footnote');
-    for(var j = 0; j < notes.length; j++){
-      (function(el, idx){ setTimeout(function(){ el.classList.add('vis'); }, 350 + paras.length * 150 + idx * 130); })(notes[j], j);
-    }
-    var btns = document.getElementById('btns');
-    if(btns) setTimeout(function(){ btns.classList.add('vis'); }, 500 + paras.length * 150 + notes.length * 130);
-  }
-  if(document.readyState === 'complete' || document.readyState === 'interactive'){ setTimeout(animateIn, 100); }
-  else { window.addEventListener('DOMContentLoaded', function(){ setTimeout(animateIn, 100); }); }
-})();
-</script>
 </body>
 </html>
