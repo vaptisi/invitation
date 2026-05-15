@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!--
+═══════════════════════════════════════════════════════════════════════
+  ΚΥΡΙΕ ΕΛΕΗΣΟΝ
+  © 2026 Γεώργιος Μπαστούνης (Georgios Bastounis)
+═══════════════════════════════════════════════════════════════════════
+-->
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Κύριε Ελέησον</title>
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="author" content="Georgios Bastounis">
+<meta name="copyright" content="© 2026 Georgios Bastounis. All rights reserved.">
+<link rel="icon" type="image/png" href="../../thumbnail.png?v=3">
+<link rel="apple-touch-icon" href="../../thumbnail.png?v=3">
+
+<style>
+/* © 2026 Georgios Bastounis — All rights reserved */
+@font-face{font-family:'Segoe Print';src:url('../../segoeprint.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;min-height:100%;font-family:'Segoe Print','Patrick Hand','Comic Sans MS','Chalkboard SE',cursive;background-color:#f5f0e8}
+body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:24px;padding-bottom:50px;position:relative}
+.bg-img{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.content-wrap{position:relative;z-index:10;width:100%;display:flex;flex-direction:column;align-items:center;padding:0 16px;gap:16px}
+.title-card{width:100%;max-width:760px;background:rgba(255,253,248,0.93);border-radius:50% / 8%;border:2px dashed #b8cfe0;padding:20px 22px;text-align:center;box-shadow:0 2px 20px rgba(0,0,0,0.08);opacity:0;transform:translateY(-10px)}
+.title-card.vis{animation:su 0.5s ease forwards}
+.title-card h1{font-size:1.4em;color:#5a7a8a;font-weight:bold;line-height:1.3}
+.pdf-frame-wrap{width:100%;max-width:760px;background:rgba(255,253,248,0.93);border-radius:18px;border:2px dashed #b8cfe0;padding:8px;box-shadow:0 2px 20px rgba(0,0,0,0.08);opacity:0;transform:translateY(10px)}
+.pdf-frame-wrap.vis{animation:su 0.5s ease 0.15s forwards}
+.pdf-frame{width:100%;height:75vh;min-height:500px;border:none;border-radius:12px;background:#fff;display:block}
+.mobile-fallback{display:none;text-align:center;padding:30px 20px;color:#5a7a8a;font-size:1em;line-height:1.6}
+.btns{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:520px;opacity:0;transform:translateY(10px)}
+.btns.vis{animation:su 0.5s ease 0.3s forwards}
+.act-btn{font-family:inherit;font-size:1.05em;color:#fff;background:linear-gradient(135deg,#8ab4d0,#6a9ab8);border:none;padding:14px 26px;border-radius:28px;cursor:pointer;width:100%;box-shadow:0 3px 12px rgba(138,180,208,0.4);-webkit-appearance:none;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:10px;transition:transform 0.15s}
+.act-btn:active{transform:scale(0.97)}
+.act-btn.outline{color:#6a9ab8;background:rgba(255,253,248,0.95);border:2px solid #b8cfe0;box-shadow:none}
+.act-btn svg{width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.back-btn{position:fixed;top:16px;left:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,253,248,0.95);border:2px solid #b8cfe0;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,0.1);-webkit-appearance:none;z-index:60;padding:0;text-decoration:none}
+.back-btn svg{width:20px;height:20px;stroke:#8ab4d0;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.back-btn:active{transform:scale(0.93)}
+@keyframes su{to{opacity:1;transform:translateY(0)}}
+@media (max-width: 640px){
+  .pdf-frame{height:60vh;min-height:380px}
+  .mobile-fallback{display:block}
+  .pdf-frame{display:none}
+}
+.copyright-footer{position:fixed;bottom:4px;left:0;right:0;text-align:center;font-size:10px;color:rgba(90,122,138,0.75);z-index:9998;font-family:'Segoe Print',cursive;letter-spacing:0.3px;pointer-events:none;text-shadow:0 1px 3px rgba(255,253,248,0.95),0 0 6px rgba(255,253,248,0.8)}
+</style>
+</head>
+<body>
+
+<img class="bg-img" src="../background.jpg" alt="background">
+
+<a class="back-btn" href="../index.html"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></a>
+
+<div class="content-wrap">
+  <div class="title-card">
+    <h1>Κύριε Ελέησον</h1>
+  </div>
+
+  <div class="pdf-frame-wrap">
+    <iframe class="pdf-frame" src="kyrie_eleison.pdf#view=FitH" title="Κύριε Ελέησον"></iframe>
+    <div class="mobile-fallback">
+      <p>📄 Πατήστε το κουμπί παρακάτω για να ανοίξετε το PDF.</p>
+    </div>
+  </div>
+
+  <div class="btns">
+    <a class="act-btn" href="kyrie_eleison.pdf" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Άνοιγμα σε νέα καρτέλα
+    </a>
+    <a class="act-btn outline" href="kyrie_eleison.pdf" download>
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Κατέβασμα PDF
+    </a>
+  </div>
+</div>
+
+<div class="copyright-footer">© 2026 Γ. Μπαστούνης · Original code &amp; design</div>
+
+<script>
+(function(){
+  function go(){
+    var els = document.querySelectorAll('.title-card, .pdf-frame-wrap, .btns');
+    for(var i = 0; i < els.length; i++) els[i].classList.add('vis');
+  }
+  if(document.readyState === 'complete' || document.readyState === 'interactive') setTimeout(go, 50);
+  else window.addEventListener('DOMContentLoaded', function(){ setTimeout(go, 50); });
+})();
+</script>
+</body>
+</html>
